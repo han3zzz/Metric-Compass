@@ -42,21 +42,21 @@ a{color:var(--accent);text-underline-offset:3px}
 .aurora i:nth-child(1){background:var(--b1);left:-18vmax;top:-22vmax}
 .aurora i:nth-child(2){background:var(--b2);right:-22vmax;top:8vmax}
 .aurora i:nth-child(3){background:var(--b3);left:20vmax;bottom:-35vmax;opacity:calc(var(--bo)*.7)}
-
+ 
 .ruler{position:relative;height:12px;margin:26px 0 18px;color:var(--muted);opacity:.8;
   background-image:linear-gradient(90deg,currentColor 1px,transparent 1px),linear-gradient(90deg,currentColor 1px,transparent 1px);
   background-size:8px 6px,40px 12px;background-repeat:repeat-x;background-position:left bottom,left bottom}
 .ruler .cur{position:absolute;left:0;top:-6px;bottom:0;width:0;pointer-events:none}
 .ruler .cur::before{content:"";position:absolute;left:-1px;top:0;bottom:0;width:2px;border-radius:2px;background:var(--accent);box-shadow:0 0 14px 2px var(--glow)}
 .ruler .cur b{position:absolute;left:8px;top:-17px;font:500 .68rem var(--font-mono);color:var(--accent);font-variant-numeric:tabular-nums}
-
+ 
 header{display:grid;gap:10px;margin-bottom:20px}
 h1{font:800 clamp(2.6rem,8vw,4.6rem)/1 var(--font-display);letter-spacing:-.045em;margin:0;overflow:hidden;padding-bottom:.12em}
 .ch1{display:inline-block}
 .sub{margin:0;max-width:68ch;color:var(--muted);font-size:1.04rem}
 .links{display:flex;flex-wrap:wrap;gap:6px 18px;font:500 .8rem var(--font-mono)}
 .disc{font-size:.8rem;color:var(--muted);margin:0;max-width:78ch}
-
+ 
 .src{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;border:1px solid var(--line);background:var(--surface);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-radius:16px;padding:11px 16px;margin-bottom:22px;font-size:.86rem;box-shadow:var(--shadow);position:relative;overflow:hidden}
 .src .dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex:0 0 auto}
@@ -67,13 +67,13 @@ h1{font:800 clamp(2.6rem,8vw,4.6rem)/1 var(--font-display);letter-spacing:-.045e
 .lv{font:500 .74rem var(--font-mono);color:var(--muted);padding:4px 10px;border-radius:999px;background:var(--neutral-bg);white-space:nowrap}
 .livebadge{display:inline-flex;align-items:center;gap:8px;font:500 .78rem var(--font-mono);color:var(--gain);padding:7px 12px;border-radius:999px;background:var(--gain-bg)}
 .livebadge i{width:7px;height:7px;border-radius:50%;background:var(--gain)}
-
+ 
 .btn{appearance:none;border:1px solid var(--line-2);background:var(--surface-2);color:var(--ink);font:600 .8rem var(--font-body);padding:8px 15px;border-radius:12px;cursor:pointer;display:inline-block}
 .btn:hover{background:var(--neutral-bg);border-color:var(--accent)}
 .btn:disabled{opacity:.5;cursor:default}
 .btn.pri{background:var(--grad);background-size:160% 100%;border:0;color:#fff;box-shadow:0 10px 26px -10px var(--glow);padding:9px 17px}
 .btn.pri:hover{background-position:100% 0;box-shadow:0 12px 30px -8px var(--glow)}
-
+ 
 nav{position:relative;display:flex;gap:2px;overflow-x:auto;padding:6px;margin-bottom:26px;border:1px solid var(--line);border-radius:18px;background:var(--surface);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);scrollbar-width:none;box-shadow:var(--shadow)}
 nav button{position:relative;z-index:1;flex:0 0 auto;appearance:none;border:0;background:transparent;color:var(--muted);padding:9px 18px;text-align:left;cursor:pointer;font:inherit;display:grid;gap:1px;border-radius:12px}
@@ -88,7 +88,7 @@ nav .ind{position:absolute;left:0;top:6px;bottom:6px;width:0;border-radius:12px;
 .head{display:grid;gap:4px;margin-bottom:18px}
 .head h2{font:800 1.55rem/1.15 var(--font-display);margin:0;letter-spacing:-.025em}
 .head p{margin:0;color:var(--muted);font-size:.92rem;max-width:78ch}
-
+ 
 .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
 .tile{position:relative;isolation:isolate;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:15px 17px;display:grid;gap:5px;min-width:0;
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow)}
@@ -100,7 +100,7 @@ nav .ind{position:absolute;left:0;top:6px;bottom:6px;width:0;border-radius:12px;
 .tv{font:500 1.45rem/1.15 var(--font-mono);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .tile.big .tv{font-size:clamp(1.9rem,5vw,2.8rem);font-weight:600;letter-spacing:-.02em}
 .pos{color:var(--gain)}.neg{color:var(--loss)}.wn{color:var(--warn)}
-
+ 
 .bar{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:end;margin-bottom:16px}
 .fld{display:grid;gap:5px;min-width:0}
 .fld:has(.dd.open){position:relative;z-index:70}
@@ -118,7 +118,7 @@ nav .ind{position:absolute;left:0;top:6px;bottom:6px;width:0;border-radius:12px;
 .chk{display:flex;align-items:center;gap:8px;font-size:.85rem;padding:8px 0;cursor:pointer}
 .chk input{accent-color:var(--accent);width:17px;height:17px}
 .grow{flex:1 1 200px}
-
+ 
 /* custom dropdown */
 .dd{position:relative}
 .dd select{display:none}
@@ -134,7 +134,7 @@ nav .ind{position:absolute;left:0;top:6px;bottom:6px;width:0;border-radius:12px;
 .dd-o:hover,.dd-o.hl{background:var(--neutral-bg)}
 .dd-o[aria-selected="true"]{color:var(--accent);background:linear-gradient(135deg,rgba(91,124,255,.2),rgba(150,92,246,.14))}
 .dd-o[aria-selected="true"]::before{content:"✓ ";font-weight:700}
-
+ 
 .tw{overflow-x:auto;border:1px solid var(--line);background:var(--surface);border-radius:16px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow)}
 table{border-collapse:collapse;width:100%;font-size:.86rem}
 th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -155,7 +155,7 @@ tbody tr.clk:hover{background:var(--neutral-bg);box-shadow:inset 3px 0 0 var(--a
 .sc i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);background:var(--c);border-radius:6px;transform-origin:left}
 .more{margin-top:14px}
 .note{font-size:.8rem;color:var(--muted);margin:10px 0 0;max-width:80ch}
-
+ 
 .split{display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);gap:28px;align-items:start}
 @media (max-width:820px){.split{grid-template-columns:minmax(0,1fr)}}
 .panel{display:grid;gap:14px;min-width:0}
@@ -165,7 +165,7 @@ dl.rows{margin:0;border-top:1px solid var(--line)}
 .row{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.9rem}
 .row dt{color:var(--muted)}
 .row dd{margin:0;font:500 .88rem var(--font-mono);text-align:right;overflow-wrap:anywhere;min-width:0}
-
+ 
 .chkl{display:grid;border:1px solid var(--line);background:var(--surface);border-radius:16px;overflow:hidden;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .ci{display:grid;grid-template-columns:78px minmax(0,1fr);gap:4px 14px;padding:13px 16px;border-bottom:1px solid var(--line);align-items:start}
 .ci:last-child{border-bottom:0}
@@ -179,7 +179,7 @@ dl.rows{margin:0;border-top:1px solid var(--line)}
 .track{height:9px;border-radius:9px;background:var(--neutral-bg);overflow:hidden}
 .track div{height:100%;border-radius:9px;transform-origin:left;box-shadow:0 0 14px currentColor}
 .addr{font:500 .8rem var(--font-mono);overflow-wrap:anywhere}
-
+ 
 figure{margin:0;display:grid;gap:6px}
 figcaption{font:600 .76rem var(--font-body);color:var(--muted)}
 svg.ch{width:100%;height:auto;display:block;background:var(--surface);border:1px solid var(--line);border-radius:16px}
@@ -190,8 +190,20 @@ svg .mk{fill:var(--accent);stroke:var(--solid);stroke-width:2}
 svg .md{stroke:var(--accent);stroke-width:1;stroke-dasharray:3 3;fill:none}
 svg .t{font:11px var(--font-mono);fill:var(--muted)}
 .empty{padding:30px 16px;text-align:center;color:var(--muted);border:1px dashed var(--line-2);border-radius:16px}
+/* reality gap + stress test */
+.dual{display:grid;gap:4px;min-width:130px}
+.dual i{display:block;height:5px;border-radius:5px;background:var(--accent);width:var(--w)}
+.dual i.p{background:var(--gain)}.dual i.n{background:var(--loss)}
+.sl{display:grid;gap:6px;min-width:0}
+.sl .top{display:flex;justify-content:space-between;gap:10px;font:600 .76rem var(--font-body);color:var(--muted)}
+.sl .top b{font:500 .82rem var(--font-mono);color:var(--ink)}
+.sl input[type=range]{width:100%;accent-color:var(--accent);margin:0}
+.stress{display:grid;gap:14px;margin-top:10px;padding-top:22px;border-top:1px solid var(--line)}
+.stress h3{font:800 1.25rem/1.2 var(--font-display);margin:0;letter-spacing:-.02em}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
 footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted);display:grid;gap:4px}
-
+ 
 /* AI drawer */
 .fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:80;display:flex;align-items:center;gap:9px;border:0;border-radius:999px;padding:13px 20px 13px 16px;
   background:var(--grad);color:#fff;font:700 .9rem var(--font-body);cursor:pointer;box-shadow:0 14px 36px -10px var(--glow),inset 0 0 0 1px rgba(255,255,255,.2);transition:transform .25s cubic-bezier(.3,1.4,.5,1),opacity .25s}
@@ -238,7 +250,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
 .send{appearance:none;border:0;width:42px;height:42px;border-radius:14px;background:var(--grad);color:#fff;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 20px -8px var(--glow);transition:transform .15s}
 .send:hover{transform:scale(1.06)}
 .send:disabled{opacity:.5;cursor:default;transform:none}
-
+ 
 /* ---- motion (all of it off when the viewer prefers reduced motion) ---- */
 @media (prefers-reduced-motion:no-preference){
   @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
@@ -285,8 +297,8 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
 }
 </style>
 <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
-
-
+ 
+ 
 <div class="wrap">
   <div class="ruler" id="ruler" aria-hidden="true"><div class="cur"><b>0</b></div></div>
   <header>
@@ -299,23 +311,24 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
     </div>
     <p class="disc fade" style="--d:800">Community tool, not an official Metric product. The safety score is this tool's own rating built from public data. It is not Metric's assessment and not financial advice.</p>
   </header>
-
+ 
   <div class="src sample fade" id="src" style="--d:900">
     <span class="dot" aria-hidden="true"></span>
     <span class="msg" id="src-msg">Loading data…</span>
     <span class="lv" id="lv" aria-live="off">Starting…</span>
   </div>
-
+ 
   <nav role="tablist" aria-label="Tools">
     <button role="tab" id="tab-pools" data-t="pools" aria-selected="true"><span class="nm">Find pools</span><span class="cp">Pool Finder</span></button>
     <button role="tab" id="tab-risk" data-t="risk" aria-selected="false"><span class="nm">Risk scan</span><span class="cp">Risk Scanner</span></button>
     <button role="tab" id="tab-curators" data-t="curators" aria-selected="false"><span class="nm">Curators</span><span class="cp">Curator Board</span></button>
+    <button role="tab" id="tab-gap" data-t="gap" aria-selected="false"><span class="nm">Real yield</span><span class="cp">Reality Gap</span></button>
     <button role="tab" id="tab-edge" data-t="edge" aria-selected="false"><span class="nm">LP edge</span><span class="cp">Edge Lab</span></button>
     <button role="tab" id="tab-route" data-t="route" aria-selected="false"><span class="nm">Route check</span><span class="cp">Route Check</span></button>
     <button role="tab" id="tab-spread" data-t="spread" aria-selected="false"><span class="nm">Spreads</span><span class="cp">Spread Monitor</span></button>
     <span class="ind" id="ind" aria-hidden="true"></span>
   </nav>
-
+ 
   <!-- FIND POOLS -->
   <section class="tool" id="tool-pools" role="tabpanel" aria-labelledby="tab-pools">
     <div class="head"><h2>Find pools by yield and safety</h2><p>Filter by chain, tier and pricing health. Click a row for a full risk scan.</p></div>
@@ -329,7 +342,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
           <button class="tg" type="button" data-v="red" aria-pressed="true">Red</button>
           <button class="tg" type="button" data-v="other" aria-pressed="false">Other</button>
         </div></div>
-      <div class="fld"><label for="f-min">Min TVL</label><div class="inp"><select id="f-min"><option value="0" selected>No minimum</option><option value="10000">$10K</option><option value="100000" >$100K</option><option value="1000000">$1M</option></select></div></div>
+      <div class="fld"><label for="f-min">Min TVL</label><div class="inp"><select id="f-min"><option value="0">No minimum</option><option value="10000">$10K</option><option value="100000" selected>$100K</option><option value="1000000">$1M</option></select></div></div>
       <div class="fld"><label for="f-sort">Sort by</label><div class="inp"><select id="f-sort"><option value="tvl">TVL</option><option value="apr">7d APR</option><option value="pnl">Trading PnL APR</option><option value="vol">24h volume</option><option value="score">Safety score</option><option value="new">Newest</option></select></div></div>
       <div class="fld grow"><label for="f-q">Search</label><div class="inp"><input id="f-q" type="search" placeholder="Pair, curator or address"></div></div>
       <label class="chk"><input id="f-healthy" type="checkbox"> Quotable pools only</label>
@@ -341,14 +354,14 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
     <button class="btn more" id="pl-more" type="button" hidden>Show more</button>
     <p class="note">APR is the LP share of fees over the last 7 days, annualized, before token price moves. Trading PnL APR also counts price moves of both tokens against simply holding them, so it is closer to the real result.</p>
   </section>
-
+ 
   <!-- RISK SCAN -->
   <section class="tool" id="tool-risk" role="tabpanel" aria-labelledby="tab-risk" hidden>
     <div class="head"><h2>Scan a pool's risk</h2><p>Turns a pool's technical fields into a plain checklist. Each item says why it matters.</p></div>
     <div class="bar"><div class="fld grow"><label for="r-pool">Select pool</label><div class="inp"><select id="r-pool"></select></div></div></div>
     <div id="risk-out"></div>
   </section>
-
+ 
   <!-- CURATORS -->
   <section class="tool" id="tool-curators" role="tabpanel" aria-labelledby="tab-curators" hidden>
     <div class="head"><h2>Curator board</h2><p>A curator runs a pool. Pools are grouped by curator to show who manages the most capital, the average yield and the share of fees they keep.</p></div>
@@ -358,7 +371,23 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
     </tr></thead><tbody id="cu-body"></tbody></table></div>
     <p class="note">Curator fee share is the part of the spread a curator takes before the rest goes to LPs. According to Metric's docs, the curator and Metric can change these shares at any time, so check again before you deposit.</p>
   </section>
-
+ 
+  <!-- REALITY GAP -->
+  <section class="tool" id="tool-gap" role="tabpanel" aria-labelledby="tab-gap" hidden>
+    <div class="head"><h2>APR Reality Gap</h2><p>The headline 7d APR counts fees only. Trading PnL APR also counts price moves versus simply holding. The gap between the two shows which pools look rich but quietly lose money.</p></div>
+    <div class="tiles" id="gp-tiles"></div>
+    <div class="bar">
+      <div class="fld"><label for="g-chain">Chain</label><div class="inp"><select id="g-chain"><option value="all">All</option></select></div></div>
+      <div class="fld"><label for="g-min">Min TVL</label><div class="inp"><select id="g-min"><option value="0">No minimum</option><option value="10000">$10K</option><option value="100000" selected>$100K</option><option value="1000000">$1M</option></select></div></div>
+      <div class="fld"><label for="g-view">Show</label><div class="inp"><select id="g-view"><option value="gap">Biggest gap first</option><option value="win">Best real yield first</option><option value="ill">Only illusions (PnL below 0)</option></select></div></div>
+      <button class="btn" id="g-copy" type="button">Copy summary to share</button>
+    </div>
+    <div class="tw"><table><thead><tr>
+      <th>Pool</th><th>Tier</th><th class="n">TVL</th><th class="n">7d APR</th><th class="n">Trading PnL APR</th><th class="n" title="7d APR minus Trading PnL APR, in percentage points">Gap (pts)</th><th>APR vs real</th><th>Verdict</th>
+    </tr></thead><tbody id="gp-body"></tbody></table></div>
+    <p class="note">Verdict: <b>Illusion</b> = Trading PnL APR is below 0 (LPs lost versus holding). <b>Eroded</b> = less than half of the headline APR survives. <b>Holds up</b> = at least half survives. Both numbers cover only 7 days, so a pool can flip next week. Treat this as a warning sign, not a verdict. Click a row for the full risk scan.</p>
+  </section>
+ 
   <!-- EDGE LAB -->
   <section class="tool" id="tool-edge" role="tabpanel" aria-labelledby="tab-edge" hidden>
     <div class="head"><h2>Edge Lab: an LP's trading result</h2><p>Simulated the way Metric describes LP returns. Edge is the gain locked in when a trade fills. Trading PnL is your position's value minus what you would hold if you had kept the tokens, both at today's price.</p></div>
@@ -385,10 +414,30 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
         <p id="e-v" style="margin:0"></p>
         <figure><figcaption>Trading PnL (USD) by token 0 price versus deposit</figcaption><svg class="ch" id="e-ch" viewBox="0 0 560 260" role="img" aria-label="Trading PnL chart"></svg></figure>
         <div class="tw"><table><thead><tr><th class="n">Token 0 price</th><th class="n">Position</th><th class="n">If held</th><th class="n">Trading PnL</th><th class="n">Versus deposit</th></tr></thead><tbody id="e-body"></tbody></table></div>
+ 
+        <div class="stress">
+          <div><h3>Stress test</h3><p class="note" style="margin:4px 0 0">Push the position above through bad days. Uses the deposit and trade from the form on the left. Token 1 is valued at $1 before any depeg.</p></div>
+          <div class="sgrid">
+            <div class="sl"><div class="top"><span>Token 0 price move</span><b id="st-p0v">-20%</b></div><input id="st-p0" type="range" min="-60" max="60" step="1" value="-20"></div>
+            <div class="sl"><div class="top"><span>Token 1 price move (depeg)</span><b id="st-p1v">0%</b></div><input id="st-p1" type="range" min="-20" max="20" step="0.5" value="0"></div>
+            <div class="sl"><div class="top"><span>Same trade repeats</span><b id="st-nv">×1</b></div><input id="st-n" type="range" min="1" max="10" step="1" value="1"></div>
+          </div>
+          <div class="btnrow" id="st-presets">
+            <button class="tg" type="button" data-a="-30,0,1">Token 0 -30%</button>
+            <button class="tg" type="button" data-a="30,0,1">Token 0 +30%</button>
+            <button class="tg" type="button" data-a="0,-5,1">Stablecoin depeg -5%</button>
+            <button class="tg" type="button" data-a="-10,0,5">One-way flow ×5</button>
+            <button class="tg" type="button" data-a="0,0,1">Reset</button>
+          </div>
+          <div class="tiles" id="st-tiles" style="margin:0"></div>
+          <p class="note" id="st-note" style="margin:0"></p>
+          <div class="tw"><table><thead><tr><th>Scenario</th><th class="n">Position</th><th class="n">Trading PnL</th><th class="n">Versus deposit</th><th>Verdict</th></tr></thead><tbody id="st-body"></tbody></table></div>
+          <p class="note" style="margin:0">"Versus deposit" includes the market move of the tokens you still hold. "Edge wiped out" means Trading PnL turned negative: the price moved past your fill price.</p>
+        </div>
       </div>
     </div>
   </section>
-
+ 
   <!-- ROUTE -->
   <section class="tool" id="tool-route" role="tabpanel" aria-labelledby="tab-route" hidden>
     <div class="head"><h2>Check the route and the real cost</h2><p>Ask Metric's router for the best swap path, then compare it with the reference price to see the cost already built into the quote. Traders on Metric pay no separate fee. The cost sits in the spread.</p></div>
@@ -407,7 +456,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
       <div class="out" id="rt-out-box"><div class="empty">Pick a token pair and press “Find route”.</div></div>
     </div>
   </section>
-
+ 
   <!-- SPREAD -->
   <section class="tool" id="tool-spread" role="tabpanel" aria-labelledby="tab-spread" hidden>
     <div class="head"><h2>Watch spreads and depth</h2><p>Reads the current bid and ask of the largest pools on one chain. The tighter the spread and the deeper the pool, the better your fill.</p></div>
@@ -421,28 +470,28 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
     <div class="tw"><table><thead><tr><th>Pool</th><th>Tier</th><th>Status</th><th class="n">Spread</th><th class="n">Available depth</th></tr></thead><tbody id="sp-body"></tbody></table></div>
     <p class="note" id="sp-note"></p>
   </section>
-
+ 
   <footer>
     <span>Data comes from Metric's public API (api.metric.xyz). All calculations run in your browser.</span>
     <span>Community project, not affiliated with Metric.</span>
   </footer>
 </div>
-
+ 
 <button class="fab" id="ai-fab" type="button" aria-label="Open AI assistant"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.9 5.6L19.5 9.5l-5.6 1.9L12 17l-1.9-5.6L4.5 9.5l5.6-1.9L12 2zm7 11l.9 2.6 2.6.9-2.6.9L19 20l-.9-2.6-2.6-.9 2.6-.9L19 13zM5 14l.7 2 2 .7-2 .7L5 19.4l-.7-2-2-.7 2-.7L5 14z"/></svg>Ask AI</button>
 <aside class="ai" id="ai" aria-hidden="true" aria-label="AI assistant">
   <div class="ai-h"><div><b>Compass AI</b><span>Reads what is on your screen</span></div>
     <button class="ib" id="ai-clear" type="button" aria-label="New chat" title="New chat">↺</button><button class="ib" id="ai-x" type="button" aria-label="Close">✕</button></div>
   <div class="ai-log" id="ai-log" aria-live="polite"></div>
-  <div class="ai-chips" id="ai-chips"><button type="button">Which pool looks safest right now?</button><button type="button">Explain the risks of the selected pool</button><button type="button">Best APR among green-tier pools?</button><button type="button">Explain my Edge Lab result</button><button type="button">Summarize the current spreads</button></div>
+  <div class="ai-chips" id="ai-chips"><button type="button">Which pool looks safest right now?</button><button type="button">Explain the risks of the selected pool</button><button type="button">Best APR among green-tier pools?</button><button type="button">Explain my Edge Lab result</button><button type="button">Summarize the current spreads</button><button type="button">Which pools have the biggest APR gap?</button><button type="button">Explain my stress test result</button></div>
   <div class="ai-f"><textarea id="ai-in" rows="1" placeholder="Ask about pools, risk, spreads…" aria-label="Message"></textarea><button class="send" id="ai-send" type="button" aria-label="Send"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
 </aside>
-
+ 
 <script>
 (function(){
 'use strict';
 /* Change API_BASE to your own proxy address if the browser reports a CORS error (see worker.js) */
 var API_BASE='https://api.metric.xyz';
-
+ 
 var $=function(id){return document.getElementById(id)};
 var reduce=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
@@ -459,7 +508,7 @@ function ageDays(ts){return ts?(Date.now()/1000-ts)/86400:null}
 function copyText(t,btn){var ok=function(){var o=btn.textContent;btn.textContent='Copied';setTimeout(function(){btn.textContent=o},1400)};
   var fb=function(){try{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();document.execCommand('copy');document.body.removeChild(a);ok()}catch(e){}};
   try{navigator.clipboard.writeText(t).then(ok,fb)}catch(e){fb()}}
-
+ 
 /* ====== count-up numbers ====== */
 var FMT={
   cu:cu,int:function(v){return nf(v,0)},pct0:function(v){return nf(v,0)+'%'},pc3:function(v){return nf(v,3)+'%'},bps:function(v){return nf(v,2)+' bps'},
@@ -489,7 +538,7 @@ function animateNums(root){
 }
 function tile(label,inner,opts,i){opts=opts||{};return '<div class="tile'+(opts.big?' big':'')+'" style="--i:'+(i||0)+'"><span class="tl">'+label+'</span><span class="tv"'+(opts.sm?' style="font-size:1.05rem"':'')+'>'+inner+'</span></div>'}
 function setTiles(el,html){qx(el);el.innerHTML=html;animateNums(el)}
-
+ 
 /* ====== sample data (same shape as the API response) ====== */
 function fakeAddr(seed){var h='',x=seed*2654435761%4294967296;for(var i=0;i<40;i++){x=(x*1664525+1013904223)%4294967296;h+='0123456789abcdef'[(x>>>24)&15]}return '0x'+h}
 var DAY=86400,NOW=Math.floor(Date.now()/1000);
@@ -524,7 +573,7 @@ function samplePools(){
   ];
   return A.map(function(r){var p=mk.apply(null,r);p.chain=r[2]===1?'ethereum':'bnb';return {chainId:r[2],pool:p}});
 }
-
+ 
 /* ====== normalize and score ====== */
 function score(o){
   var t={green:40,yellow:25,red:5}[o.tier];if(t===undefined)t=10;
@@ -552,11 +601,11 @@ function norm(p,chainId){
   o.score=score(o);
   return o;
 }
-
+ 
 var S={pools:[],chains:[],source:'sample',updated:null,sel:null,limit:60};
 var CHAIN_NAME={1:'Ethereum',56:'BNB Chain'};
 function chainLabel(id){return CHAIN_NAME[id]||('Chain '+id)}
-
+ 
 /* ====== live data ====== */
 function jget(url,opts,ms){
   var ctl=typeof AbortController!=='undefined'?new AbortController():null;
@@ -622,12 +671,12 @@ function tryLive(silent){
     banner('sample','<b>Showing sample data.</b> Could not reach api.metric.xyz ('+why+'). Retrying automatically. If you host this page yourself and still see this, the cause is usually CORS: use the proxy in worker.js and change API_BASE.');
   });
 }
-
+ 
 /* ====== selectors ====== */
 function poolsByTvl(){return S.pools.slice().sort(function(a,b){return (b.tvl||0)-(a.tvl||0)})}
 function fillSelects(){
   var opts='<option value="all">All</option>'+S.chains.map(function(id){return '<option value="'+id+'">'+esc(chainLabel(id))+'</option>'}).join('');
-  var cur=$('f-chain').value;$('f-chain').innerHTML=opts;if([].some.call($('f-chain').options,function(o){return o.value===cur}))$('f-chain').value=cur;
+  ['f-chain','g-chain'].forEach(function(id){var cur=$(id).value;$(id).innerHTML=opts;if([].some.call($(id).options,function(o){return o.value===cur}))$(id).value=cur});
   var co=S.chains.map(function(id){return '<option value="'+id+'">'+esc(chainLabel(id))+'</option>'}).join('');
   ['rt-chain','sp-chain'].forEach(function(id){var c=$(id).value;$(id).innerHTML=co;if(c&&[].some.call($(id).options,function(o){return o.value===c}))$(id).value=c});
   $('r-pool').innerHTML=poolsByTvl().map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.pair+' · '+chainLabel(p.chainId)+' · '+short(p.addr)+' · '+cu(p.tvl))+'</option>'}).join('');
@@ -650,7 +699,7 @@ function fillTokens(){
   var outV=(b&&tk.some(function(t){return t.addr===b}))?b:(find('USDC')||(tk[1]&&tk[1].addr));
   if(inV)$('rt-in').value=inV;if(outV)$('rt-out').value=outV;
 }
-
+ 
 /* ====== TAB 1: FIND POOLS ====== */
 function tierBadge(t){var m={green:['b-g','Green'],yellow:['b-y','Yellow'],red:['b-r','Red']}[t]||['b-u',t==='black'?'Delisted':'Unranked'];return '<span class="badge '+m[0]+'">'+m[1]+'</span>'}
 var STATUS={healthy:['pos','Quotable'],feed_down:['neg','Feed down'],pool_refused:['neg','Pool refused'],pool_paused:['neg','Paused'],unknown:['wn','Unknown']};
@@ -689,7 +738,7 @@ function renderPools(){
   }).join(''):'<tr><td colspan="9"><div class="empty">No pools match these filters.</div></td></tr>';
   $('pl-more').hidden=L.length<=S.limit;
 }
-
+ 
 /* ====== TAB 2: RISK SCAN ====== */
 var REASON={
   curator_unverified:'The curator has not been verified by Metric.',
@@ -753,7 +802,7 @@ function renderRisk(){
     renderEdge();location.hash='edge';
   };
 }
-
+ 
 /* ====== TAB 3: CURATORS ====== */
 function renderCurators(){
   var G={};
@@ -777,7 +826,7 @@ function renderCurators(){
     return '<tr class="clk" style="--i:'+Math.min(i,14)+'"><td><b>'+esc(g.name)+'</b></td><td>'+(g.verified?'<span class="pos">● Verified</span>':'<span class="wn">● Not yet</span>')+'</td><td class="n">'+g.n+'</td><td class="n">'+cu(g.tvl)+'</td><td class="n">'+(g.aprTvl?pc(g.aw/g.aprTvl,1):'—')+'</td><td class="n">'+(g.feeTvl?pc(g.fee/g.feeTvl,1):'—')+'</td><td>'+mix+'</td></tr>';
   }).join('');
 }
-
+ 
 /* ====== line chart ====== */
 function chart(el,o,anim){
   var W=560,H=260,L=60,R=16,T=14,B=34;
@@ -796,9 +845,9 @@ function chart(el,o,anim){
   el.innerHTML=s;
   if(anim){void el.getBoundingClientRect();el.classList.add('draw')}
 }
-
+ 
 /* ====== TAB 4: EDGE LAB ====== */
-function renderEdge(anim){var q0=QUIET;QUIET=!anim;try{renderEdge0(anim)}finally{QUIET=q0}}
+function renderEdge(anim){var q0=QUIET;QUIET=!anim;try{renderEdge0(anim);renderStress()}finally{QUIET=q0}}
 function renderEdge0(anim){
   var g=function(id){var v=parseFloat($(id).value);return isFinite(v)?v:0};
   var s0=$('e-s0').value||'T0',s1=$('e-s1').value||'T1';
@@ -825,7 +874,99 @@ function renderEdge0(anim){
   $('e-body').innerHTML=[-20,-10,-5,0,5,10,20].map(function(m){var P=p0*(1+m/100);var t=pnl(P);var v=pos(P)-dep;
     return '<tr><td class="n">'+usd(P)+' ('+(m>0?'+':'')+m+'%)</td><td class="n">'+usd(pos(P))+'</td><td class="n">'+usd(hold(P))+'</td><td class="n '+tone(t)+'">'+usd(t)+'</td><td class="n '+tone(v)+'">'+usd(v)+'</td></tr>'}).join('');
 }
-
+ 
+/* ====== REALITY GAP ====== */
+function gapList(ch,min){
+  return S.pools.filter(function(p){
+    return p.apr!=null&&p.pnl!=null&&(p.tvl||0)>=min&&(ch==='all'||String(p.chainId)===String(ch));
+  }).map(function(p){return {p:p,gap:p.apr-p.pnl}});
+}
+function gapVerdict(p){
+  if(p.pnl<0)return ['b-r','Illusion'];
+  if(p.apr>0&&p.pnl<p.apr*0.5)return ['b-y','Eroded'];
+  return ['b-g','Holds up'];
+}
+var GAPSHOT=[];
+function renderGap(){
+  var ch=$('g-chain').value,min=+$('g-min').value,view=$('g-view').value;
+  var all=gapList(ch,min);
+  var byGap=all.slice().sort(function(a,b){return b.gap-a.gap});
+  GAPSHOT=byGap;
+  var L=all.slice();
+  if(view==='ill')L=L.filter(function(r){return r.p.pnl<0});
+  if(view==='win')L.sort(function(a,b){return b.p.pnl-a.p.pnl});
+  else L.sort(function(a,b){return b.gap-a.gap});
+  var tvl=0,wa=0,wp=0,neg=0,negTvl=0;
+  all.forEach(function(r){var t=r.p.tvl||0;tvl+=t;wa+=r.p.apr*t;wp+=r.p.pnl*t;if(r.p.pnl<0){neg++;negTvl+=t}});
+  setTiles($('gp-tiles'),
+    tile('Pools analyzed',cnt(all.length,'int','gp-n'),null,0)+
+    tile('7d APR (TVL-weighted)',tvl?cnt(wa/tvl,'pc1','gp-apr'):'—',null,1)+
+    tile('Trading PnL APR (TVL-weighted)',tvl?cnt(wp/tvl,'spc1','gp-pnl',tone(wp)):'—',null,2)+
+    tile('Pools losing versus holding',cnt(neg,'int','gp-neg',neg?'neg':''),null,3)+
+    tile('TVL inside those pools',cnt(negTvl,'cu','gp-negtvl',negTvl?'neg':''),null,4));
+  var show=L.slice(0,80);
+  qx($('gp-body'));
+  $('gp-body').innerHTML=show.length?show.map(function(r,i){
+    var p=r.p,d=Math.min(i,14),v=gapVerdict(p);
+    var den=Math.max(Math.abs(p.apr),Math.abs(p.pnl),0.0001);
+    var wA=Math.max(2,Math.abs(p.apr)/den*100),wP=Math.max(2,Math.abs(p.pnl)/den*100);
+    return '<tr class="clk" style="--i:'+d+'" data-id="'+esc(p.id)+'" tabindex="0"><td class="pr"><b>'+esc(p.pair)+'</b><span>'+esc(chainLabel(p.chainId))+' · '+esc(short(p.addr))+'</span></td>'+
+      '<td>'+tierBadge(p.tier)+'</td><td class="n">'+cu(p.tvl)+'</td><td class="n">'+pc(p.apr,1)+'</td>'+
+      '<td class="n '+tone(p.pnl)+'">'+spc(p.pnl,1)+'</td><td class="n">'+nf(r.gap,1)+'</td>'+
+      '<td><div class="dual" title="Top bar: headline APR. Bottom bar: Trading PnL APR."><i style="--w:'+wA.toFixed(0)+'%"></i><i class="'+(p.pnl<0?'n':'p')+'" style="--w:'+wP.toFixed(0)+'%"></i></div></td>'+
+      '<td><span class="badge '+v[0]+'">'+v[1]+'</span></td></tr>';
+  }).join(''):'<tr><td colspan="8"><div class="empty">No pools match these filters.</div></td></tr>';
+}
+function gapSummaryText(){
+  var top=GAPSHOT.slice(0,5);
+  if(!top.length)return '';
+  var lines=top.map(function(r,i){var p=r.p;
+    return (i+1)+'. '+p.pair+' ('+chainLabel(p.chainId)+'): headline APR '+pc(p.apr,1)+' → real '+spc(p.pnl,1)+' · TVL '+cu(p.tvl)});
+  return 'Metric Compass · APR Reality Gap (7d)\nBiggest gaps between headline APR and Trading PnL APR:\n'+lines.join('\n')+'\n\nCommunity tool, not financial advice. '+location.href.split('#')[0];
+}
+ 
+/* ====== STRESS TEST ====== */
+function edgeIn(){
+  var g=function(id){var v=parseFloat($(id).value);return isFinite(v)?v:0};
+  var q0=g('e-q0'),q1=g('e-q1'),p0=g('e-p0'),s=g('e-s'),x=g('e-x'),buy=$('e-dir').value==='buy';
+  return {q0:q0,q1:q1,p0:p0,s:s,x:x,buy:buy,d0:buy?-s:s,d1:buy?s*x:-s*x,dep:q0*p0+q1,
+    s0:$('e-s0').value||'T0',s1:$('e-s1').value||'T1'};
+}
+function stressCalc(e,m0,m1,n){
+  var lim=Infinity,who='';
+  if(e.d0<0&&e.q0>=0){lim=e.q0/(-e.d0);who=e.s0}
+  if(e.d1<0&&e.q1>=0&&e.q1/(-e.d1)<lim){lim=e.q1/(-e.d1);who=e.s1}
+  var k=Math.max(1,Math.min(n,Math.floor(lim+1e-9)));
+  var D0=e.d0*k,D1=e.d1*k,P0=e.p0*(1+m0/100),P1=1+m1/100;
+  var pos=(e.q0+D0)*P0+(e.q1+D1)*P1,hold=e.q0*P0+e.q1*P1,pnl=D0*P0+D1*P1;
+  return {k:k,capped:k<n,who:who,pos:pos,hold:hold,pnl:pnl,vs:pos-e.dep};
+}
+var STRESS_PRESETS=[
+  ['Token 0 -30%',-30,0,1],['Token 0 -10%',-10,0,1],['Token 0 +10%',10,0,1],['Token 0 +30%',30,0,1],
+  ['Stablecoin depeg -5%',0,-5,1],['Token 0 -30% and depeg -5%',-30,-5,1],['One-way flow ×5, token 0 -10%',-10,0,5],['One-way flow ×5, token 0 +10%',10,0,5]
+];
+function renderStress(){
+  if(!$('st-tiles'))return;
+  var e=edgeIn();
+  var m0=parseFloat($('st-p0').value)||0,m1=parseFloat($('st-p1').value)||0,n=parseInt($('st-n').value,10)||1;
+  $('st-p0v').textContent=(m0>0?'+':'')+m0+'%';$('st-p1v').textContent=(m1>0?'+':'')+m1+'%';$('st-nv').textContent='×'+n;
+  var r=stressCalc(e,m0,m1,n);
+  setTiles($('st-tiles'),
+    tile('Position value',cnt(r.pos,'usd','st-pos'),null,0)+
+    tile('If you had held',cnt(r.hold,'usd','st-hold'),null,1)+
+    tile('Trading PnL',cnt(r.pnl,'usd','st-pnl',tone(r.pnl)),{big:true},2)+
+    tile('Versus deposit',cnt(r.vs,'usd','st-vs',tone(r.vs)),null,3));
+  $('st-note').textContent=r.capped?('The pool runs out of '+r.who+' after '+r.k+' fill'+(r.k===1?'':'s')+', so the test stops at ×'+r.k+'.'):
+    (r.pnl<0?'Trading PnL is negative: the market moved past your fills, so you would be worse off than if you had never traded.':'Trading PnL stays positive in this scenario: the edge from your fills is still ahead of the price move.');
+  var worst=null;
+  var rows=STRESS_PRESETS.map(function(c){var x=stressCalc(e,c[1],c[2],c[3]);var o={name:c[0],r:x};if(!worst||x.pnl<worst.r.pnl)worst=o;return o});
+  qx($('st-body'));
+  $('st-body').innerHTML=rows.map(function(o,i){var x=o.r;
+    return '<tr style="--i:'+Math.min(i,14)+'"><td>'+esc(o.name)+(x.capped?' <span class="wn" title="Pool inventory runs out before the last fill">(×'+x.k+' max)</span>':'')+'</td><td class="n">'+usd(x.pos)+'</td><td class="n '+tone(x.pnl)+'">'+usd(x.pnl)+'</td><td class="n '+tone(x.vs)+'">'+usd(x.vs)+'</td>'+
+      '<td><span class="badge '+(x.pnl<0?'b-r':'b-g')+'">'+(x.pnl<0?'Edge wiped out':'Still ahead')+'</span></td></tr>'}).join('');
+  if(worst)$('st-note').textContent+=' Worst preset: '+worst.name+' ('+usd(worst.r.pnl)+' Trading PnL).';
+}
+ 
 /* ====== TAB 5: ROUTE ====== */
 function parseUnits(str,dec){
   str=String(str).trim();if(!/^\d*\.?\d*$/.test(str)||str===''||str==='.')return null;
@@ -889,7 +1030,7 @@ function runRoute(silent){
     renderRouteResult({error:'Could not get a route: '+(e&&e.message?e.message:'unknown error')});done();
   });
 }
-
+ 
 /* ====== TAB 6: SPREADS ====== */
 var spreadTimer=null;
 function spreadRows(list,res){
@@ -946,14 +1087,14 @@ function setAuto(){
   if(spreadTimer){clearInterval(spreadTimer);spreadTimer=null}
   if($('sp-auto').checked)spreadTimer=setInterval(function(){if(location.hash==='#spread')runSpread()},30000);
 }
-
+ 
 /* ====== navigation ====== */
 function renderAll(){
-  renderPools();renderRisk();renderCurators();renderEdge();fillTokens();syncAll();
+  renderPools();renderRisk();renderCurators();renderGap();renderEdge();fillTokens();syncAll();
   if(S.source!=='live'||location.hash==='#spread')runSpread(QUIET);
   else{$('sp-body').innerHTML='<tr><td colspan="5"><div class="empty">Open this tab to stream live spreads.</div></td></tr>';$('sp-tiles').innerHTML='';$('sp-note').textContent=''}
 }
-var TABS=['pools','risk','curators','edge','route','spread'];
+var TABS=['pools','risk','curators','gap','edge','route','spread'];
 function placeInd(){
   var b=document.querySelector('nav button[aria-selected="true"]'),ind=$('ind');if(!b)return;
   ind.style.width=b.offsetWidth+'px';ind.style.transform='translateX('+b.offsetLeft+'px)';
@@ -970,6 +1111,7 @@ function show(){
   if(h==='edge')renderEdge(true);
   if(h==='pools')animateNums($('pl-tiles'));
   if(h==='curators')animateNums($('cu-tiles'));
+  if(h==='gap')animateNums($('gp-tiles'));
   if(h==='spread'&&S.source==='live')runSpread();
   if(h==='route'&&!LAST.routeArgs&&S.pools.length)runRoute();
   syncAll();
@@ -978,21 +1120,26 @@ document.querySelectorAll('nav button').forEach(function(b){b.addEventListener('
 window.addEventListener('hashchange',show);
 window.addEventListener('resize',placeInd);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(placeInd);
-
+ 
 ['f-chain','f-min','f-sort','f-healthy','f-locked'].forEach(function(id){$(id).addEventListener('input',function(){S.limit=60;renderPools()})});
 $('f-q').addEventListener('input',function(){S.limit=60;QUIET=true;renderPools();QUIET=false});
 document.querySelectorAll('#f-tiers .tg').forEach(function(b){b.addEventListener('click',function(){b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');S.limit=60;renderPools()})});
 $('pl-more').addEventListener('click',function(){S.limit+=60;renderPools()});
 function rowPick(e){var tr=e.target.closest&&e.target.closest('tr[data-id]');if(!tr)return;S.sel=tr.getAttribute('data-id');$('r-pool').value=S.sel;renderRisk();location.hash='risk'}
-$('pl-body').addEventListener('click',rowPick);$('sp-body').addEventListener('click',rowPick);
-['pl-body','sp-body'].forEach(function(id){$(id).addEventListener('keydown',function(e){if(e.key==='Enter')rowPick(e)})});
+$('pl-body').addEventListener('click',rowPick);$('sp-body').addEventListener('click',rowPick);$('gp-body').addEventListener('click',rowPick);
+['g-chain','g-min','g-view'].forEach(function(id){$(id).addEventListener('input',function(){renderGap()})});
+$('g-copy').addEventListener('click',function(){var t=gapSummaryText();if(t)copyText(t,this)});
+['st-p0','st-p1','st-n'].forEach(function(id){$(id).addEventListener('input',function(){QUIET=true;renderStress();QUIET=false})});
+$('st-presets').addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(!b)return;var a=b.getAttribute('data-a').split(',');
+  $('st-p0').value=a[0];$('st-p1').value=a[1];$('st-n').value=a[2];renderStress()});
+['pl-body','sp-body','gp-body'].forEach(function(id){$(id).addEventListener('keydown',function(e){if(e.key==='Enter')rowPick(e)})});
 $('r-pool').addEventListener('input',function(){S.sel=$('r-pool').value;renderRisk()});
 ['e-s0','e-s1','e-q0','e-q1','e-p0','e-dir','e-s','e-x'].forEach(function(id){$(id).addEventListener('input',function(){renderEdge()})});
 $('rt-chain').addEventListener('input',function(){fillTokens();syncAll();debRoute()});
 $('rt-go').addEventListener('click',function(){runRoute()});
 $('sp-go').addEventListener('click',function(){runSpread()});
 $('sp-chain').addEventListener('input',function(){runSpread()});$('sp-n').addEventListener('input',function(){runSpread()});
-
+ 
 /* ====== ruler cursor and title reveal ====== */
 (function(){
   var h=$('h1'),t=h.textContent;
@@ -1014,8 +1161,8 @@ $('sp-chain').addEventListener('input',function(){runSpread()});$('sp-n').addEve
   }
   requestAnimationFrame(loop);
 })();
-
-
+ 
+ 
 /* ====== custom dropdowns ====== */
 var DDS=[];
 function closeAll(){DDS.forEach(function(w){w._open(false)})}
@@ -1051,13 +1198,13 @@ function enhance(sel){
 }
 document.addEventListener('pointerdown',function(e){if(!e.target.closest('.dd'))closeAll()});
 document.querySelectorAll('select').forEach(enhance);
-
+ 
 /* tile spotlight follows the pointer */
 document.addEventListener('pointermove',function(e){
   var t=e.target.closest&&e.target.closest('.tile');if(!t)return;
   var r=t.getBoundingClientRect();t.style.setProperty('--mx',(e.clientX-r.left)+'px');t.style.setProperty('--my',(e.clientY-r.top)+'px');
 });
-
+ 
 /* ====== realtime scheduler ====== */
 var LIVE={on:true};
 function tick(){
@@ -1075,7 +1222,7 @@ setInterval(tick,1000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden&&LIVE.on)nextAt=Math.min(nextAt,Date.now()+400)});
 var rtT;function debRoute(){clearTimeout(rtT);rtT=setTimeout(function(){runRoute()},450)}
 ['rt-in','rt-out','rt-amt','rt-max'].forEach(function(id){$(id).addEventListener('input',debRoute)});
-
+ 
 /* ====== AI agent (Groq) ====== */
 /* AI chat config.
    - Leave GROQ_KEY empty (recommended): chat goes to your own worker at /ai/chat (same origin), key stays on the server.
@@ -1136,11 +1283,14 @@ function ctx(){
   if(sel)L.push('Pool selected in Risk scan: '+f(sel)+'\nChecklist:\n'+checks(sel).map(function(c){return '- ['+c[0]+'] '+c[1]+': '+String(c[2]).replace(/<[^>]+>/g,'')}).join('\n'));
   var v=function(id){return $(id).value};
   L.push('Edge Lab inputs: token0='+v('e-s0')+', token1='+v('e-s1')+', deposited '+v('e-q0')+' / '+v('e-q1')+', token0 price at deposit='+v('e-p0')+', traders '+v('e-dir')+' token0, size='+v('e-s')+', avg fill price='+v('e-x')+'. Tiles: '+$('e-tiles').innerText.replace(/\s+/g,' ')+' Verdict: '+$('e-v').innerText);
+  var gl=gapList('all',100000).sort(function(a,b){return b.gap-a.gap}).slice(0,10);
+  if(gl.length)L.push('APR Reality Gap (pools with TVL>=$100K, biggest gap first; gap = 7d APR minus Trading PnL APR, in points):\n'+gl.map(function(r){return r.p.pair+' ['+chainLabel(r.p.chainId)+'] APR '+pc(r.p.apr,1)+' vs Trading PnL APR '+spc(r.p.pnl,1)+' gap '+nf(r.gap,1)+' verdict '+gapVerdict(r.p)[1]}).join('\n'));
+  if($('st-tiles'))L.push('Edge Lab stress test: token0 move '+$('st-p0v').textContent+', token1 move '+$('st-p1v').textContent+', trade repeats '+$('st-nv').textContent+'. Result: '+$('st-tiles').innerText.replace(/\s+/g,' ')+' '+$('st-note').textContent);
   if(LAST.route&&!LAST.route.error)L.push('Last route check'+(LAST.route.sim?' (simulated)':'')+': receive '+LAST.route.outText+' '+LAST.route.outSym+', effective price '+LAST.route.price+', price impact '+(LAST.route.impact==null?'n/a':nf(LAST.route.impact,3)+'%')+', cost vs reference '+(LAST.route.costBps==null?'n/a':nf(LAST.route.costBps,1)+' bps')+', routes: '+LAST.route.routes.map(function(x){return x.path+' '+nf(x.share,0)+'%'}).join('; '));
   if(LAST.spread&&LAST.spread.length)L.push('Spread monitor (tightest first):\n'+LAST.spread.slice(0,12).map(function(r){return r.p.pair+' ['+r.p.tier+'] '+(r.bps==null?(r.note||'n/a'):nf(r.bps,2)+' bps')+' depth '+cu(r.depth)}).join('\n'));
   return L.join('\n\n');
 }
-var SYS='You are Compass AI, the assistant built into "Metric Compass", a community dashboard for Metric (api.metric.xyz), an onchain market-making/LP protocol. Tabs: Find pools (filter by chain/tier/health), Risk scan (checklist per pool), Curators (pools grouped by curator), Edge Lab (simulates an LP\'s Edge and Trading PnL), Route check (router quote vs reference price) and Spread monitor (live bid/ask spreads). The safety score is this tool\'s own rating, not Metric\'s: tier up to 40 (green 40, yellow 25, red 5), price provider quotable 25, locked pricing 10, verified curator 10, pool active 10, stop-loss present 5. APR = LP share of fees over 7 days annualized; Trading PnL APR also counts price moves versus holding. Answer in the same language the user writes in (Vietnamese if they write Vietnamese). Use ONLY the numbers in the live context below; if something is not there, say so instead of guessing. Be concise, explain jargon simply, mention risks honestly, and remind the user this is not financial advice when they ask whether to deposit.\n\nLIVE CONTEXT (what the user sees right now):\n';
+var SYS='You are Compass AI, the assistant built into "Metric Compass", a community dashboard for Metric (api.metric.xyz), an onchain market-making/LP protocol. Tabs: Find pools (filter by chain/tier/health), Risk scan (checklist per pool), Curators (pools grouped by curator), Edge Lab (simulates an LP\'s Edge and Trading PnL), Route check (router quote vs reference price), Spread monitor (live bid/ask spreads) and Reality Gap (7d APR vs Trading PnL APR per pool; a negative Trading PnL means LPs lost versus simply holding). Edge Lab also has a stress test (token price moves, depeg, repeated one-way trades). The safety score is this tool\'s own rating, not Metric\'s: tier up to 40 (green 40, yellow 25, red 5), price provider quotable 25, locked pricing 10, verified curator 10, pool active 10, stop-loss present 5. APR = LP share of fees over 7 days annualized; Trading PnL APR also counts price moves versus holding. Answer in the same language the user writes in (Vietnamese if they write Vietnamese). Use ONLY the numbers in the live context below; if something is not there, say so instead of guessing. Be concise, explain jargon simply, mention risks honestly, and remind the user this is not financial advice when they ask whether to deposit.\n\nLIVE CONTEXT (what the user sees right now):\n';
 function aiSend(text){
   text=String(text||'').trim();if(!text||AI.busy)return;
     addMsg('user',text);$('ai-in').value='';$('ai-in').style.height='auto';
@@ -1176,7 +1326,7 @@ $('ai-in').addEventListener('input',function(){this.style.height='auto';this.sty
 $('ai-chips').addEventListener('click',function(e){var b=e.target.closest('button');if(b)aiSend(b.textContent)});
 function greet(){addMsg('a','<p>Hi! I can see the data on this page: pools, the pool in Risk scan, Edge Lab numbers, the last route and live spreads. Ask in any language.</p>')}
 greet();
-
+ 
 setData(samplePools(),[1,56],'sample');
 show();
 tryLive();
