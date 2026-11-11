@@ -274,6 +274,13 @@ td small.mut{color:var(--muted);font:500 .7rem var(--font-mono);margin-left:6px}
 }
 footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted);display:grid;gap:4px}
  
+.sbgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.sbc{display:grid;gap:12px;padding:14px;border:1px solid var(--line);background:var(--surface);border-radius:16px;min-width:0;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.sbc:has(.dd.open){position:relative;z-index:70}
+#sb-out{display:grid;gap:0;min-width:0}
+#sb-out .h3s{margin-top:26px}
+#sb-out .tw th:first-child,#sb-out .tw td:first-child{position:sticky;left:0;background:var(--solid);z-index:1}
+
 /* AI drawer */
 .fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:80;display:flex;align-items:center;gap:9px;border:0;border-radius:999px;padding:13px 20px 13px 16px;
   background:var(--grad);color:#fff;font:700 .9rem var(--font-body);cursor:pointer;box-shadow:0 14px 36px -10px var(--glow),inset 0 0 0 1px rgba(255,255,255,.2);transition:transform .25s cubic-bezier(.3,1.4,.5,1),opacity .25s}
@@ -551,6 +558,57 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
         </div>
       </div>
     </div>
+  
+    <div class="stress" id="bins" style="margin-top:40px">
+      <div><h3 style="font-size:1.5rem">Bin Scenario Simulator</h3>
+        <p class="note" style="margin:6px 0 0">Spread your capital over price bins, then replay scenarios: the oracle price moves, volume or spread changes, the curator changes the quote, or the reference price jumps. Compare up to three strategies on the same pool. This is a model with the assumptions listed at the bottom, not a promise of what the protocol will do.</p></div>
+      <div class="bar">
+        <div class="fld grow"><label for="sb-pool">Load a pool (fills the fields below)</label><div class="inp"><select id="sb-pool"><option value="">Custom inputs</option></select></div></div>
+        <div class="fld"><label for="sb-cap">Capital</label><div class="inp"><input id="sb-cap" type="number" step="any" inputmode="decimal" value="40000"><span class="u">USD</span></div></div>
+        <div class="fld"><label for="sb-p0">Token 0 price now</label><div class="inp"><input id="sb-p0" type="number" step="any" inputmode="decimal" value="2000"><span class="u">in token 1</span></div></div>
+        <div class="fld"><label for="sb-step">Bin step</label><div class="inp"><select id="sb-step"><option value="0.1">0.10%</option><option value="0.25" selected>0.25%</option><option value="0.5">0.50%</option><option value="1">1%</option><option value="2">2%</option></select></div></div>
+      </div>
+      <div class="bar">
+        <div class="fld"><label for="sb-vol">Pool daily volume</label><div class="inp"><input id="sb-vol" type="number" step="any" inputmode="decimal" value="3000000"><span class="u">USD</span></div></div>
+        <div class="fld"><label for="sb-tvl">Pool TVL</label><div class="inp"><input id="sb-tvl" type="number" step="any" inputmode="decimal" value="5000000"><span class="u">USD</span></div></div>
+        <div class="fld"><label for="sb-spr" title="Spread traders pay, in basis points. The Spread Monitor tab shows real values.">Spread paid by traders</label><div class="inp"><input id="sb-spr" type="number" step="any" inputmode="decimal" value="4"><span class="u">bps</span></div></div>
+        <div class="fld"><label for="sb-lam" title="How far from the current price most trading happens. Bigger = more volatile market.">Trading reach (λ)</label><div class="inp"><input id="sb-lam" type="number" step="any" inputmode="decimal" value="3" min="0.1"><span class="u">% from price</span></div></div>
+        <div class="fld"><label for="sb-sl" title="0 = no stop-loss. Loaded from the pool when it has one.">Stop-loss limit</label><div class="inp"><input id="sb-sl" type="number" step="any" inputmode="decimal" value="3" min="0"><span class="u">% of capital</span></div></div>
+      </div>
+
+      <div class="sbgrid">
+        <div class="sbc"><span class="tg2" style="font:600 .7rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:#7BA0FF">Strategy A</span>
+          <div class="fld"><label for="sb-k0">Distribution</label><div class="inp"><select id="sb-k0"><option value="apr">APR Pro-Rata</option><option value="vol">Volume Pro-Rata</option><option value="exp" selected>Exponential</option><option value="flat">Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div></div>
+          <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r0v">±5%</b></div><input id="sb-r0" type="range" min="1" max="60" step="1" value="5"></div></div>
+        <div class="sbc"><span class="tg2" style="font:600 .7rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:#B25CF0">Strategy B</span>
+          <div class="fld"><label for="sb-k1">Distribution</label><div class="inp"><select id="sb-k1"><option value="apr">APR Pro-Rata</option><option value="vol">Volume Pro-Rata</option><option value="exp">Exponential</option><option value="flat" selected>Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div></div>
+          <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r1v">±25%</b></div><input id="sb-r1" type="range" min="1" max="60" step="1" value="25"></div></div>
+        <div class="sbc"><span class="tg2" style="font:600 .7rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:#36E3B2">Strategy C</span>
+          <div class="fld"><label for="sb-k2">Distribution</label><div class="inp"><select id="sb-k2"><option value="apr">APR Pro-Rata</option><option value="vol" selected>Volume Pro-Rata</option><option value="exp">Exponential</option><option value="flat">Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div></div>
+          <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r2v">±12%</b></div><input id="sb-r2" type="range" min="1" max="60" step="1" value="12"></div></div>
+      </div>
+
+      <div><h3 class="h3s" style="margin:6px 0 10px">Scenario</h3>
+        <div class="sgrid">
+          <div class="sl"><div class="top"><span>Token 0 price move</span><b id="sb-mv">-10%</b></div><input id="sb-m" type="range" min="-50" max="50" step="1" value="-10"></div>
+          <div class="sl"><div class="top"><span>Volume</span><b id="sb-vmv">×1.00</b></div><input id="sb-vm" type="range" min="0.25" max="4" step="0.05" value="1"></div>
+          <div class="sl"><div class="top"><span>Spread (curator quote)</span><b id="sb-smv">×1.0</b></div><input id="sb-sm" type="range" min="0.5" max="3" step="0.1" value="1"></div>
+          <div class="sl"><div class="top"><span>Curator fee share</span><b id="sb-csv">20%</b></div><input id="sb-cs" type="range" min="0" max="60" step="1" value="20"></div>
+          <div class="sl"><div class="top"><span>Holding period</span><b id="sb-dv">7 d</b></div><input id="sb-d" type="range" min="1" max="90" step="1" value="7"></div>
+        </div>
+        <div class="btnrow" id="sb-pre" style="margin-top:12px"></div>
+      </div>
+
+      <div><h3 class="h3s" style="margin:6px 0 10px">Reference price jump (stress test)</h3>
+        <div class="sgrid">
+          <div class="sl"><div class="top"><span>Jump within one hour</span><b id="sb-jv">+5%</b></div><input id="sb-j" type="range" min="-20" max="20" step="1" value="5"></div>
+          <div class="sl"><div class="top"><span>Jump is split into</span><b id="sb-jkv">12 steps</b></div><input id="sb-jk" type="range" min="1" max="60" step="1" value="12"></div>
+        </div>
+      </div>
+
+      <div id="sb-out"></div>
+      <p class="note" style="margin:0">How the model works. Each bin is a price level: bins above the price hold token 0 and bins below hold token 1, and a trade crossing a bin converts it at that bin's price. Trading PnL is the position value minus holding the initial tokens, as in Edge Lab. Distributions: Flat is equal weight; Exponential fades from the price outward over a third of the range; Inverted puts more at the edges; Volume Pro-Rata follows where trades happen; APR Pro-Rata follows volume divided by the liquidity already there (flatter than volume); Single bin puts everything at the price. Fees: trading volume is spread over price levels with a Laplace shape (reach λ) that follows the price along a straight path to the scenario price, the pool's existing liquidity is assumed more spread out than volume, and you earn your share of each bin's fees, times the LP part of the spread (100% minus curator share minus Metric's share). Stop-loss: Metric's exact drawdown rule is not public in this data, so the simulator treats the stop-loss limit as Trading PnL loss as a percent of capital, checked after each step of the jump. Simplifications: the deposit is placed straight into the chosen distribution with no cost for swapping into that mix, volume does not react to spread changes, and the price path is a line. Seven days of data can flip quickly. Not Metric's model and not financial advice.</p>
+    </div>
   </section>
  
   <!-- ROUTE -->
@@ -795,7 +853,7 @@ function fillSelects(){
   var co=S.chains.map(function(id){return '<option value="'+id+'">'+esc(chainLabel(id))+'</option>'}).join('');
   ['rt-chain','sp-chain'].forEach(function(id){var c=$(id).value;$(id).innerHTML=co;if(c&&[].some.call($(id).options,function(o){return o.value===c}))$(id).value=c});
   $('r-pool').innerHTML=poolsByTvl().map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.pair+' · '+chainLabel(p.chainId)+' · '+short(p.addr)+' · '+cu(p.tvl))+'</option>'}).join('');
-  if(S.sel)$('r-pool').value=S.sel;
+  if(S.sel)$('r-pool').value=S.sel;binFill();
   fixCmp();
   fillTokens();
 }
@@ -1423,6 +1481,216 @@ function renderPort(){
   LAST.port=planText(pl,cap);
 }
 
+/* ====== BIN SCENARIO SIMULATOR ====== */
+/* Model: liquidity sits in discrete price bins (constant-sum, like a DLMM). Bins above the price hold token 0,
+   bins below hold token 1. Traders crossing a bin convert it. Fees follow a Laplace volume profile around the price. */
+var BN={proto:7.5,pair:''};
+var BKIND=[['apr','APR Pro-Rata'],['vol','Volume Pro-Rata'],['exp','Exponential'],['flat','Flat'],['single','Single bin'],['inv','Inverted'],['off','Off']];
+var BNAME={};BKIND.forEach(function(k){BNAME[k[0]]=k[1]});
+var BCOL=['#7BA0FF','#B25CF0','#36E3B2'],BLET=['A','B','C'];
+function bnum(id,d){var v=parseFloat($(id).value);return isFinite(v)?v:d}
+function binEnv(){
+  return {D:Math.max(1,bnum('sb-cap',40000)),P0:Math.max(1e-9,bnum('sb-p0',2000)),V:Math.max(0,bnum('sb-vol',3000000)),T:Math.max(1,bnum('sb-tvl',5000000)),
+    lam:Math.max(.1,bnum('sb-lam',3)),spr:Math.max(0,bnum('sb-spr',4)),step:Math.max(.05,bnum('sb-step',.25)),thr:Math.max(0,bnum('sb-sl',3))};
+}
+function binScen(){return {m:bnum('sb-m',0),vm:bnum('sb-vm',1),sm:bnum('sb-sm',1),cs:bnum('sb-cs',20),days:Math.max(.1,bnum('sb-d',7))}}
+function binBuild(kind,R,env){
+  var step=env.step,nb=Math.floor(R/step+1e-9),i;
+  if(kind==='single')nb=0;
+  else{if(nb<1)nb=1;if(nb>100){step=R/100;nb=100}}
+  var lr=Math.log(1+step/100),bins=[],W=0,h0=0,h1=0;
+  for(i=-nb;i<=nb;i++){
+    var d=Math.abs(i)*lr*100,w=1;
+    if(kind==='vol')w=Math.exp(-d/env.lam);
+    else if(kind==='apr')w=Math.exp(-d/(2*env.lam));
+    else if(kind==='exp')w=Math.exp(-d/(R/3));
+    else if(kind==='inv')w=.1+d/R;
+    else w=1;
+    bins.push({i:i,p:env.P0*Math.pow(1+step/100,i),w:w});W+=w;
+  }
+  bins.forEach(function(b){
+    b.a=b.w/W*env.D;b.lp=Math.log(b.p);b.hi=b.lp+lr/2;
+    if(b.i>0){b.c0=b.a/env.P0;b.c1=b.c0*b.p;b.f0=1}else{b.c0=b.a/b.p;b.c1=b.a;b.f0=b.i<0?0:.5}
+    h0+=b.f0*b.c0;h1+=(1-b.f0)*b.c1;
+  });
+  return {kind:kind,R:R,step:step,nb:nb,lr:lr,bins:bins,h0:h0,h1:h1,lmin:bins[0].lp-lr/2,lmax:bins[bins.length-1].hi,
+    maxA:Math.max.apply(null,bins.map(function(b){return b.a}))};
+}
+function binValue(S,P){
+  var lp=Math.log(P),pos=0,B=S.bins,n=B.length,k,f,b;
+  for(k=0;k<n;k++){b=B[k];f=(b.hi-lp)/S.lr;f=f<0?0:f>1?1:f;pos+=f*b.c0*P+(1-f)*b.c1}
+  var hold=S.h0*P+S.h1;return {pos:pos,hold:hold,pnl:pos-hold};
+}
+function binFees(S,env,sc){
+  var K=10,m=Math.max(-95,sc.m)/100,lam=env.lam,rate=env.spr*sc.sm/1e4*Math.max(0,100-sc.cs-BN.proto)/100;
+  var Vt=env.V*sc.days*sc.vm/K,vk=S.step/(2*lam),lk=env.T*S.step/(4*lam),fee=0,B=S.bins,n=B.length,k,j,b,dl,lc;
+  for(k=0;k<K;k++){
+    lc=Math.log(env.P0*(1+m*(k+.5)/K));
+    for(j=0;j<n;j++){b=B[j];dl=Math.abs(b.lp-lc)*100;fee+=Vt*vk*Math.exp(-dl/lam)*rate*b.a/(b.a+lk*Math.exp(-dl/(2*lam)))}
+  }
+  return fee;
+}
+function binRun(S,env,sc){
+  var P=env.P0*(1+Math.max(-95,sc.m)/100),v=binValue(S,P),fees=binFees(S,env,sc),lp=Math.log(P);
+  return {fees:fees,pnl:v.pnl,pos:v.pos,hold:v.hold,net:fees+v.pnl,vsDep:v.pos+fees-env.D,apr:fees/env.D*365/sc.days*100,inr:lp>=S.lmin&&lp<=S.lmax};
+}
+/* the reference price jumps by j% in K equal steps; stop-loss is checked after each step */
+function binJump(S,env,j,K){
+  var out={trig:null,pnlStop:null},k,v;
+  for(k=1;k<=K;k++){
+    v=binValue(S,env.P0*(1+j/100*k/K));
+    if(env.thr>0&&out.trig===null&&-v.pnl/env.D*100>=env.thr){out.trig=k;out.pnlStop=v.pnl}
+  }
+  v=binValue(S,env.P0*(1+j/100));
+  out.pnlFull=v.pnl;out.valChg=v.pos-env.D;out.K=K;
+  if(out.trig===null)out.pnlStop=v.pnl;
+  return out;
+}
+function binStrats(env){
+  var o=[],k,kind,R,S;
+  for(k=0;k<3;k++){
+    kind=$('sb-k'+k).value;if(kind==='off')continue;
+    R=bnum('sb-r'+k,10);S=binBuild(kind,R,env);S.idx=k;
+    S.label=BLET[k]+' · '+BNAME[kind]+(kind==='single'?'':' ±'+R+'%');
+    S.tag=BNAME[kind]+(kind==='single'?'':' ±'+R+'%');
+    o.push(S);
+  }
+  return o;
+}
+function binChartSVG(list,env,sc){
+  var W=560,H=280,L=64,R=16,T=14,B=34,xs=[],i;
+  for(i=-40;i<=40;i+=4)xs.push(i);
+  var data=list.map(function(S){return xs.map(function(m){return binRun(S,env,{m:m,vm:sc.vm,sm:sc.sm,cs:sc.cs,days:sc.days}).net})});
+  var lo=0,hi=0;data.forEach(function(a){a.forEach(function(v){if(v<lo)lo=v;if(v>hi)hi=v})});
+  if(hi-lo<1)hi=lo+1;var pad=(hi-lo)*.08;lo-=pad;hi+=pad;
+  var sx=function(x){return L+(x+40)/80*(W-L-R)},sy=function(y){return T+(hi-y)/(hi-lo)*(H-T-B)};
+  var s='',v;
+  for(i=0;i<=4;i++){v=lo+(hi-lo)*i/4;s+='<line class="gl" x1="'+L+'" x2="'+(W-R)+'" y1="'+sy(v).toFixed(1)+'" y2="'+sy(v).toFixed(1)+'"/><text class="t" x="'+(L-8)+'" y="'+(sy(v)+4).toFixed(1)+'" text-anchor="end">'+(v<0?'-':'')+'$'+nf(Math.abs(v),Math.abs(v)<10?1:0)+'</text>'}
+  s+='<line class="z" x1="'+L+'" x2="'+(W-R)+'" y1="'+sy(0).toFixed(1)+'" y2="'+sy(0).toFixed(1)+'"/>';
+  for(i=-40;i<=40;i+=20)s+='<line class="gl" x1="'+sx(i)+'" x2="'+sx(i)+'" y1="'+T+'" y2="'+(H-B)+'"/><text class="t" x="'+sx(i)+'" y="'+(H-B+18)+'" text-anchor="middle">'+(i>0?'+':'')+i+'%</text>';
+  var mx=Math.max(-40,Math.min(40,sc.m));
+  s+='<line class="md" x1="'+sx(mx)+'" x2="'+sx(mx)+'" y1="'+T+'" y2="'+(H-B)+'"/>';
+  list.forEach(function(S,k){
+    var d='';xs.forEach(function(x,j){d+=(j?'L':'M')+sx(x).toFixed(1)+' '+sy(data[k][j]).toFixed(1)});
+    s+='<path d="'+d+'" fill="none" stroke="'+BCOL[S.idx]+'" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>';
+  });
+  return '<svg class="ch" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Net result versus holding by final price move">'+s+'</svg>';
+}
+function binDistSVG(S,env,sc,Rm){
+  var W=360,H=118,cx=180,hw=165,base=92,lmx=Math.log(1+Rm/100)*1.1,s='',i;
+  var X=function(rel){return cx+rel/lmx*hw};
+  S.bins.forEach(function(b){
+    var rel=b.lp-Math.log(env.P0),w=Math.max(1.2,S.lr/lmx*hw-.6),h=Math.max(1,b.a/S.maxA*74);
+    s+='<rect x="'+(X(rel)-w/2).toFixed(1)+'" y="'+(base-h).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="1" fill="'+BCOL[S.idx]+'" opacity="'+(b.i<0?'.55':b.i>0?'.95':'1')+'"/>';
+  });
+  s+='<line x1="10" x2="350" y1="'+base+'" y2="'+base+'" class="z"/><line x1="'+cx+'" x2="'+cx+'" y1="8" y2="'+base+'" class="md"/>';
+  var mr=Math.log(1+Math.max(-95,sc.m)/100);if(Math.abs(mr)<=lmx)s+='<line x1="'+X(mr).toFixed(1)+'" x2="'+X(mr).toFixed(1)+'" y1="8" y2="'+base+'" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="4 3"/>';
+  s+='<text class="t" x="10" y="'+(H-8)+'">-'+Rm+'%</text><text class="t" x="'+cx+'" y="'+(H-8)+'" text-anchor="middle">price now</text><text class="t" x="350" y="'+(H-8)+'" text-anchor="end">+'+Rm+'%</text>';
+  return '<svg class="ch" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Liquidity per bin for '+esc(S.tag)+'">'+s+'</svg>';
+}
+function renderBins(){
+  if(!$('sb-out'))return;
+  var env=binEnv(),sc=binScen(),i,k;
+  var sg=function(v,d){return (v>0?'+':'')+v+(d||'')};
+  $('sb-mv').textContent=sg(sc.m,'%');$('sb-vmv').textContent='×'+nf(sc.vm,2);$('sb-smv').textContent='×'+nf(sc.sm,1);$('sb-csv').textContent=nf(sc.cs,0)+'%';$('sb-dv').textContent=sc.days+' d';
+  var jj=bnum('sb-j',5),jk=Math.round(bnum('sb-jk',12));
+  $('sb-jv').textContent=sg(jj,'%');$('sb-jkv').textContent=jk+(jk===1?' step':' steps');
+  for(k=0;k<3;k++)$('sb-r'+k+'v').textContent=$('sb-k'+k).value==='single'?'1 bin':'±'+$('sb-r'+k).value+'%';
+  var list=binStrats(env);
+  if(!list.length){$('sb-out').innerHTML='<div class="empty">Choose at least one distribution above.</div>';LAST.bins='';return}
+  var res=list.map(function(S){return binRun(S,env,sc)});
+  var bi=0;res.forEach(function(r,x){if(r.net>res[bi].net)bi=x});
+  var wi=0;res.forEach(function(r,x){if(r.net<res[wi].net)wi=x});
+  var head='<tr><th>Metric</th>'+list.map(function(S){return '<th><span style="color:'+BCOL[S.idx]+'">●</span> '+esc(S.label)+'</th>'}).join('')+'</tr>';
+  var row=function(name,fn,best,tn){return '<tr><td>'+name+'</td>'+list.map(function(S,x){var r=res[x];var t=tn?tn(r,S):'';return '<td class="n'+(best&&x===bi&&list.length>1?' w':'')+(t?' '+t:'')+'">'+fn(r,S)+'</td>'}).join('')+'</tr>'};
+  var body=
+    row('Distribution',function(r,S){return esc(BNAME[S.kind])},false)+
+    row('Bins (step)',function(r,S){return S.bins.length+' ('+nf(S.step,2)+'%)'},false)+
+    row('Tallest bin',function(r,S){return nf(S.maxA/env.D*100,1)+'% of capital'},false)+
+    row('Fees earned',function(r){return usd(r.fees)},false)+
+    row('Trading PnL',function(r){return usd(r.pnl)},false,function(r){return tone(r.pnl)})+
+    row('Net vs holding (fees + trading)',function(r){return '<b>'+usd(r.net)+'</b>'},true,function(r){return tone(r.net)})+
+    row('Versus deposit (incl. token move)',function(r){return usd(r.vsDep)},false,function(r){return tone(r.vsDep)})+
+    row('Fee APR on capital',function(r){return pc(r.apr,1)},false)+
+    row('Final price',function(r){return r.inr?'<span class="pos">inside range</span>':'<span class="wn">outside range</span>'},false);
+  var verdict=list.length>1?
+    '<b>'+esc(list[bi].tag)+' ('+BLET[list[bi].idx]+') comes out best: '+usd(res[bi].net)+' versus holding.</b><p>'+(res[bi].net<0?'Every strategy loses to simply holding in this scenario. ':'')+'Weakest: '+esc(list[wi].tag)+' ('+BLET[list[wi].idx]+') at '+usd(res[wi].net)+'. Scenario: token 0 '+sg(sc.m,'%')+', volume ×'+nf(sc.vm,2)+', spread ×'+nf(sc.sm,1)+', curator keeps '+nf(sc.cs,0)+'%, '+sc.days+' days.</p>':
+    '<b>'+esc(list[0].tag)+': '+usd(res[0].net)+' versus holding.</b><p>Add a second strategy above to compare shapes side by side. Scenario: token 0 '+sg(sc.m,'%')+', volume ×'+nf(sc.vm,2)+', spread ×'+nf(sc.sm,1)+', curator keeps '+nf(sc.cs,0)+'%, '+sc.days+' days.</p>';
+  var Rm=5;list.forEach(function(S){if(S.kind!=='single')Rm=Math.max(Rm,S.R);else Rm=Math.max(Rm,Math.ceil(S.step*3))});
+  var dist=list.map(function(S){return '<figure><figcaption><span style="color:'+BCOL[S.idx]+'">●</span> '+esc(S.label)+' · '+S.bins.length+' bin'+(S.bins.length===1?'':'s')+'</figcaption>'+binDistSVG(S,env,sc,Rm)+'</figure>'}).join('');
+  var leg=list.map(function(S){return '<span><i style="background:'+BCOL[S.idx]+'"></i>'+esc(S.label)+'</span>'}).join('');
+  var ms=[-30,-15,-5,0,5,15,30];
+  var sc_rows=ms.map(function(m){
+    var rr=list.map(function(S){return binRun(S,env,{m:m,vm:sc.vm,sm:sc.sm,cs:sc.cs,days:sc.days})}),b=0;rr.forEach(function(r,x){if(r.net>rr[b].net)b=x});
+    return '<tr><td class="n">'+(m>0?'+':'')+m+'%</td>'+rr.map(function(r,x){return '<td class="n'+(x===b&&list.length>1?' w':'')+' '+tone(r.net)+'">'+usd(r.net)+'<small class="mut">'+usd(r.fees,0)+' fees</small></td>'}).join('')+'</tr>'}).join('');
+  /* stress: reference price jump */
+  var jr=list.map(function(S){return binJump(S,env,jj,jk)});
+  var mins=60/jk;
+  var jrows=list.map(function(S,x){
+    var r=jr[x],loss=-r.pnlFull/env.D*100,stopTxt,verd;
+    if(env.thr<=0){stopTxt='<span class="b-u badge">No stop-loss set</span>'}
+    else if(r.trig!==null){stopTxt='<span class="badge b-y">Triggers at step '+r.trig+' of '+jk+(jk>1?' (~'+nf(r.trig*mins,0)+' min)':'')+'</span>'}
+    else stopTxt='<span class="badge b-g">Not triggered</span>';
+    var lossStop=-r.pnlStop/env.D*100;
+    verd=lossStop>=env.thr*1.5&&env.thr>0?['b-r','Loss beyond limit']:lossStop>0?['b-y','Loss']:['b-g','Edge still ahead'];
+    return '<tr><td><span style="color:'+BCOL[S.idx]+'">●</span> '+esc(S.label)+'</td><td class="n '+tone(r.pnlFull)+'">'+usd(r.pnlFull)+'</td><td class="n">'+pc(loss,2)+'</td><td>'+stopTxt+'</td><td class="n '+tone(r.pnlStop)+'">'+usd(r.pnlStop)+'</td><td class="n '+tone(r.valChg)+'">'+usd(r.valChg)+'</td><td><span class="badge '+verd[0]+'">'+verd[1]+'</span></td></tr>';
+  }).join('');
+  var js=[-10,-5,-2,2,5,10];
+  var grows=js.map(function(j){return '<tr><td class="n">'+(j>0?'+':'')+j+'%</td>'+list.map(function(S){
+    var r=binJump(S,env,j,jk),l=-r.pnlFull/env.D*100,cls=env.thr>0&&l>=env.thr?'b-r':env.thr>0&&l>=env.thr/2?'b-y':'b-g';
+    return '<td class="n"><span class="badge '+cls+'">'+(l>0?'-':'+')+nf(Math.abs(l),2)+'%</span><small class="mut">'+usd(r.pnlFull,0)+'</small></td>'}).join('')+'</tr>'}).join('');
+  var selp=$('sb-pool').value?poolById($('sb-pool').value):null;
+  var velNote=selp&&selp.vel?' This pool also has a per-block price change limit, which can pause quotes during a fast jump. That is not modelled here.':'';
+  var jtxt='If the reference price jumps '+sg(jj,'%')+' in 60 minutes ('+jk+' step'+(jk===1?'':'s')+(jk>1?' of '+nf(mins,1)+' min':'')+'), arbitrageurs fill your bins at stale prices. '+
+    (env.thr>0?'The stop-loss is set at '+nf(env.thr,2)+'% of capital and is checked after every step.':'No stop-loss is set, so the loss runs through the whole jump.')+velNote;
+  $('sb-out').innerHTML=
+    '<div class="verdict">'+verdict+'</div>'+
+    '<div class="tw"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>'+
+    '<h3 class="h3s">Net result versus holding, by final price</h3>'+
+    '<figure>'+binChartSVG(list,env,sc)+'</figure>'+'<div class="lg">'+leg+'</div>'+
+    '<h3 class="h3s">Where each strategy puts your liquidity</h3><div class="sbgrid">'+dist+'</div>'+
+    '<p class="note">Dashed white line: price now. Orange line: the scenario price. Bars left of the line hold token 1, bars right hold token 0, and traders convert them as the price crosses.</p>'+
+    '<h3 class="h3s">Scenario grid (net vs holding)</h3><div class="tw"><table><thead><tr><th class="n">Token 0 move</th>'+list.map(function(S){return '<th class="n"><span style="color:'+BCOL[S.idx]+'">●</span> '+esc(S.label)+'</th>'}).join('')+'</tr></thead><tbody>'+sc_rows+'</tbody></table></div>'+
+    '<h3 class="h3s">Stress test: reference price jump</h3><p class="note" style="margin:0 0 12px">'+esc(jtxt)+'</p>'+
+    '<div class="tw"><table><thead><tr><th>Strategy</th><th class="n">Trading PnL after full jump</th><th class="n">% of capital</th><th>Stop-loss</th><th class="n">Trading PnL if halted</th><th class="n" title="Position value minus deposit, including the market move of tokens you still hold">Position value change</th><th>Verdict</th></tr></thead><tbody>'+jrows+'</tbody></table></div>'+
+    '<h3 class="h3s">Loss by jump size (% of capital)</h3><div class="tw"><table><thead><tr><th class="n">Jump</th>'+list.map(function(S){return '<th class="n"><span style="color:'+BCOL[S.idx]+'">●</span> '+esc(S.label)+'</th>'}).join('')+'</tr></thead><tbody>'+grows+'</tbody></table></div>'+
+    '<p class="note">Red means the stop-loss limit is reached, yellow means more than half of it. Fees are ignored during the jump: it is short, and arbitrage flow pays no edge to LPs.</p>';
+  LAST.bins='Bin Scenario Simulator'+(BN.pair?' (pool '+BN.pair+')':'')+': capital '+usd(env.D,0)+', token 0 price '+usd(env.P0)+', scenario token 0 '+sg(sc.m,'%')+', volume x'+nf(sc.vm,2)+', spread x'+nf(sc.sm,1)+', curator share '+nf(sc.cs,0)+'%, '+sc.days+' days.\n'+
+    list.map(function(S,x){var r=res[x];return S.label+': fees '+usd(r.fees,0)+', trading PnL '+usd(r.pnl,0)+', net vs holding '+usd(r.net,0)+', fee APR '+pc(r.apr,1)+(r.inr?'':' (price outside range)')}).join('\n')+
+    '\nJump test '+sg(jj,'%')+' in '+jk+' steps, stop-loss '+(env.thr>0?nf(env.thr,2)+'% of capital':'off')+': '+list.map(function(S,x){var r=jr[x];return S.label+' trading PnL '+usd(r.pnlFull,0)+(env.thr>0?(r.trig!==null?', stop-loss triggers at step '+r.trig+', loss if halted '+usd(r.pnlStop,0):', stop-loss not triggered'):'')}).join('; ');
+}
+function binFill(){
+  var el=$('sb-pool');if(!el)return;var cur=el.value;
+  el.innerHTML='<option value="">Custom inputs</option>'+poolsByTvl().slice(0,80).map(function(p){return '<option value="'+esc(p.id)+'">'+esc(p.pair+' · '+chainLabel(p.chainId)+' · '+cu(p.tvl))+'</option>'}).join('');
+  el.value=cur&&poolById(cur)?cur:'';
+}
+function binLoad(id){
+  var p=id?poolById(id):null;if(!p){BN.pair='';return}
+  var px=(p.px0&&p.px1)?p.px0/p.px1:p.px0;
+  if(px)$('sb-p0').value=+px.toPrecision(6);
+  if(p.tvl)$('sb-tvl').value=Math.round(p.tvl);
+  if(p.vol!=null)$('sb-vol').value=Math.round(p.vol);
+  if(p.adminPct!=null)$('sb-cs').value=Math.round(p.adminPct);
+  BN.proto=p.protoPct!=null?p.protoPct:7.5;BN.pair=p.pair;
+  $('sb-sl').value=p.stop&&p.stop.drawdownE6?+(p.stop.drawdownE6/1e4).toFixed(2):0;
+  var sp=(LAST.spread||[]).filter(function(r){return r.p.id===p.id&&r.bps!=null})[0];
+  if(sp)$('sb-spr').value=+sp.bps.toFixed(2);
+}
+var BSCEN=[['Calm, price flat',0,1,1,null,7],['Bull +20%, busy',20,2,1,null,7],['Bear −20%, busy',-20,2,1,null,7],['Crash −35%, volume ×4',-35,4,1.5,null,3],['Curator widens spread ×2',null,.7,2,null,null],['Curator takes 50%',null,null,null,50,null],['Volume dries up ×0.25',null,.25,null,null,null],['Reset',0,1,1,20,7]];
+(function(){
+  if(!$('sb-out'))return;
+  var ids=['sb-cap','sb-p0','sb-vol','sb-tvl','sb-spr','sb-lam','sb-step','sb-sl','sb-k0','sb-k1','sb-k2','sb-r0','sb-r1','sb-r2','sb-m','sb-vm','sb-sm','sb-cs','sb-d','sb-j','sb-jk'];
+  ids.forEach(function(id){$(id).addEventListener('input',function(){renderBins()})});
+  $('sb-pool').addEventListener('input',function(){binLoad(this.value);renderBins()});
+  $('sb-pre').innerHTML=BSCEN.map(function(s,i){return '<button class="tg" type="button" data-i="'+i+'">'+esc(s[0])+'</button>'}).join('');
+  $('sb-pre').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-i]');if(!b)return;var s=BSCEN[+b.getAttribute('data-i')];
+    ['sb-m','sb-vm','sb-sm','sb-cs','sb-d'].forEach(function(id,k){if(s[k+1]!==null)$(id).value=s[k+1]});
+    renderBins();
+  });
+})();
+
+
 /* ====== TAB 5: ROUTE ====== */
 function parseUnits(str,dec){
   str=String(str).trim();if(!/^\d*\.?\d*$/.test(str)||str===''||str==='.')return null;
@@ -1546,7 +1814,7 @@ function setAuto(){
  
 /* ====== navigation ====== */
 function renderAll(){
-  renderPools();renderRisk();renderCurators();renderGap();renderCmp();renderPort();renderEdge();fillTokens();syncAll();
+  renderPools();renderRisk();renderCurators();renderGap();renderCmp();renderPort();renderEdge();renderBins();fillTokens();syncAll();
   if(S.source!=='live'||location.hash==='#spread')runSpread(QUIET);
   else{$('sp-body').innerHTML='<tr><td colspan="5"><div class="empty">Open this tab to stream live spreads.</div></td></tr>';$('sp-tiles').innerHTML='';$('sp-note').textContent=''}
 }
@@ -1781,11 +2049,12 @@ function ctx(){
   if(LAST.dna)L.push('Pool DNA (six 0-100 traits) for Pool A in the Compare tab:\n'+LAST.dna);
   if(LAST.duel)L.push('Pool duel currently shown in the Compare tab:\n'+LAST.duel);
   if(LAST.port)L.push('Portfolio builder plan currently shown:\n'+LAST.port);
+  if(LAST.bins)L.push(LAST.bins);
   if(LAST.route&&!LAST.route.error)L.push('Last route check'+(LAST.route.sim?' (simulated)':'')+': receive '+LAST.route.outText+' '+LAST.route.outSym+', effective price '+LAST.route.price+', price impact '+(LAST.route.impact==null?'n/a':nf(LAST.route.impact,3)+'%')+', cost vs reference '+(LAST.route.costBps==null?'n/a':nf(LAST.route.costBps,1)+' bps')+', routes: '+LAST.route.routes.map(function(x){return x.path+' '+nf(x.share,0)+'%'}).join('; '));
   if(LAST.spread&&LAST.spread.length)L.push('Spread monitor (tightest first):\n'+LAST.spread.slice(0,12).map(function(r){return r.p.pair+' ['+r.p.tier+'] '+(r.bps==null?(r.note||'n/a'):nf(r.bps,2)+' bps')+' depth '+cu(r.depth)}).join('\n'));
   return L.join('\n\n');
 }
-var SYS='You are Compass AI, the assistant built into "Metric Compass", a community dashboard for Metric (api.metric.xyz), an onchain market-making/LP protocol. Tabs: Find pools (filter by chain/tier/health), Risk scan (checklist per pool), Curators (pools grouped by curator), Edge Lab (simulates an LP\'s Edge and Trading PnL), Route check (router quote vs reference price), Spread monitor (live bid/ask spreads) and Reality Gap (7d APR vs Trading PnL APR per pool; a negative Trading PnL means LPs lost versus simply holding). Edge Lab also has a Position stress test (token price moves, depeg, repeated one-way trades) that follows one position using the real fill price and edge the user entered. The Compare tab shows Pool DNA for one pool (0-100 on real yield, safety, depth, stability as 24h vs 7d APR consistency, age and curator, plus an archetype name) and, once a second pool is added, a Pool duel on those six traits (a gap under 4 points is a tie). Portfolio builder picks 3-5 quotable pools with non-negative Trading PnL APR for a Cautious/Balanced/Bold profile, splits the capital, and runs a Basket stress test, a rougher model than the Edge Lab Position stress test (50/50 value split, held, no fees or edge), so the two will not match. The safety score is this tool\'s own rating, not Metric\'s: tier up to 40 (green 40, yellow 25, red 5), price provider quotable 25, locked pricing 10, verified curator 10, pool active 10, stop-loss present 5. APR = LP share of fees over 7 days annualized; Trading PnL APR also counts price moves versus holding. Answer in the same language the user writes in (Vietnamese if they write Vietnamese). Use ONLY the numbers in the live context below; if something is not there, say so instead of guessing. Be concise, explain jargon simply, mention risks honestly, and remind the user this is not financial advice when they ask whether to deposit.\n\nLIVE CONTEXT (what the user sees right now):\n';
+var SYS='You are Compass AI, the assistant built into "Metric Compass", a community dashboard for Metric (api.metric.xyz), an onchain market-making/LP protocol. Tabs: Find pools (filter by chain/tier/health), Risk scan (checklist per pool), Curators (pools grouped by curator), Edge Lab (simulates an LP\'s Edge and Trading PnL), Route check (router quote vs reference price), Spread monitor (live bid/ask spreads) and Reality Gap (7d APR vs Trading PnL APR per pool; a negative Trading PnL means LPs lost versus simply holding). Edge Lab also has a Position stress test (token price moves, depeg, repeated one-way trades) that follows one position using the real fill price and edge the user entered. The Compare tab shows Pool DNA for one pool (0-100 on real yield, safety, depth, stability as 24h vs 7d APR consistency, age and curator, plus an archetype name) and, once a second pool is added, a Pool duel on those six traits (a gap under 4 points is a tie). Edge Lab also has a Bin Scenario Simulator: liquidity spread over price bins with strategies (APR Pro-Rata, Volume Pro-Rata, Exponential, Flat, Single bin, Inverted), scenarios for price move, volume, spread and curator fee share, a side-by-side comparison of up to three strategies, and a reference price jump stress test that checks a stop-loss step by step. Its numbers come from a simplified model, so say so. Portfolio builder picks 3-5 quotable pools with non-negative Trading PnL APR for a Cautious/Balanced/Bold profile, splits the capital, and runs a Basket stress test, a rougher model than the Edge Lab Position stress test (50/50 value split, held, no fees or edge), so the two will not match. The safety score is this tool\'s own rating, not Metric\'s: tier up to 40 (green 40, yellow 25, red 5), price provider quotable 25, locked pricing 10, verified curator 10, pool active 10, stop-loss present 5. APR = LP share of fees over 7 days annualized; Trading PnL APR also counts price moves versus holding. Answer in the same language the user writes in (Vietnamese if they write Vietnamese). Use ONLY the numbers in the live context below; if something is not there, say so instead of guessing. Be concise, explain jargon simply, mention risks honestly, and remind the user this is not financial advice when they ask whether to deposit.\n\nLIVE CONTEXT (what the user sees right now):\n';
 function aiSend(text){
   text=String(text||'').trim();if(!text||AI.busy)return;
     addMsg('user',text);$('ai-in').value='';$('ai-in').style.height='auto';
