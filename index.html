@@ -274,12 +274,27 @@ td small.mut{color:var(--muted);font:500 .7rem var(--font-mono);margin-left:6px}
 }
 footer{margin-top:44px;padding-top:16px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted);display:grid;gap:4px}
  
+.bsplit{display:grid;grid-template-columns:minmax(0,350px) minmax(0,1fr);gap:22px;align-items:start}
+.bside{display:grid;gap:12px;min-width:0}
+@media (min-width:981px) and (min-height:900px){.bside{position:sticky;top:12px}}
+@media (max-width:980px){.bsplit{grid-template-columns:minmax(0,1fr)}}
+.bmain{min-width:0}
+.bg{border:1px solid var(--line);background:var(--surface);border-radius:16px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);min-width:0}
+.bg:has(.dd.open){position:relative;z-index:70}
+.bg>summary{list-style:none;cursor:pointer;padding:12px 16px;font:700 .9rem var(--font-body);display:flex;justify-content:space-between;align-items:center;border-radius:16px}
+.bg>summary::-webkit-details-marker{display:none}
+.bg>summary::after{content:"▾";color:var(--muted);transition:transform .2s}
+.bg:not([open])>summary::after{transform:rotate(-90deg)}
+.bg>summary:hover{background:var(--neutral-bg)}
+.bgb{display:grid;gap:12px;padding:2px 16px 16px}
+.sbs{display:grid;gap:8px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.sbl{font:600 .72rem var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+.sbt{display:flex;gap:6px;flex-wrap:wrap;margin:16px 0 14px}
 .sbgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
-.sbc{display:grid;gap:12px;padding:14px;border:1px solid var(--line);background:var(--surface);border-radius:16px;min-width:0;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.sbc:has(.dd.open){position:relative;z-index:70}
-#sb-out{display:grid;gap:0;min-width:0}
-#sb-out .h3s{margin-top:26px}
+#sb-out{min-width:0}
+#sb-out figure{margin-bottom:6px}
 #sb-out .tw th:first-child,#sb-out .tw td:first-child{position:sticky;left:0;background:var(--solid);z-index:1}
+#sb-pre .tg{font-size:.72rem;padding:6px 11px}
 
 /* AI drawer */
 .fab{position:fixed;right:max(18px,env(safe-area-inset-right,0px));bottom:max(18px,env(safe-area-inset-bottom,0px));z-index:80;display:flex;align-items:center;gap:9px;border:0;border-radius:999px;padding:13px 20px 13px 16px;
@@ -561,53 +576,61 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
   
     <div class="stress" id="bins" style="margin-top:40px">
       <div><h3 style="font-size:1.5rem">Bin Scenario Simulator</h3>
-        <p class="note" style="margin:6px 0 0">Spread your capital over price bins, then replay scenarios: the oracle price moves, volume or spread changes, the curator changes the quote, or the reference price jumps. Compare up to three strategies on the same pool. This is a model with the assumptions listed at the bottom, not a promise of what the protocol will do.</p></div>
-      <div class="bar">
-        <div class="fld grow"><label for="sb-pool">Load a pool (fills the fields below)</label><div class="inp"><select id="sb-pool"><option value="">Custom inputs</option></select></div></div>
-        <div class="fld"><label for="sb-cap">Capital</label><div class="inp"><input id="sb-cap" type="number" step="any" inputmode="decimal" value="40000"><span class="u">USD</span></div></div>
-        <div class="fld"><label for="sb-p0">Token 0 price now</label><div class="inp"><input id="sb-p0" type="number" step="any" inputmode="decimal" value="2000"><span class="u">in token 1</span></div></div>
-        <div class="fld"><label for="sb-step">Bin step</label><div class="inp"><select id="sb-step"><option value="0.1">0.10%</option><option value="0.25" selected>0.25%</option><option value="0.5">0.50%</option><option value="1">1%</option><option value="2">2%</option></select></div></div>
-      </div>
-      <div class="bar">
-        <div class="fld"><label for="sb-vol">Pool daily volume</label><div class="inp"><input id="sb-vol" type="number" step="any" inputmode="decimal" value="3000000"><span class="u">USD</span></div></div>
-        <div class="fld"><label for="sb-tvl">Pool TVL</label><div class="inp"><input id="sb-tvl" type="number" step="any" inputmode="decimal" value="5000000"><span class="u">USD</span></div></div>
-        <div class="fld"><label for="sb-spr" title="Spread traders pay, in basis points. The Spread Monitor tab shows real values.">Spread paid by traders</label><div class="inp"><input id="sb-spr" type="number" step="any" inputmode="decimal" value="4"><span class="u">bps</span></div></div>
-        <div class="fld"><label for="sb-lam" title="How far from the current price most trading happens. Bigger = more volatile market.">Trading reach (λ)</label><div class="inp"><input id="sb-lam" type="number" step="any" inputmode="decimal" value="3" min="0.1"><span class="u">% from price</span></div></div>
-        <div class="fld"><label for="sb-sl" title="0 = no stop-loss. Loaded from the pool when it has one.">Stop-loss limit</label><div class="inp"><input id="sb-sl" type="number" step="any" inputmode="decimal" value="3" min="0"><span class="u">% of capital</span></div></div>
-      </div>
+        <p class="note" style="margin:6px 0 0">Spread your capital over price bins, replay scenarios and compare up to three strategies on the same pool. Set things up on the left, read the result on the right. It is a model, not a promise of what the protocol will do (assumptions at the bottom).</p></div>
+      <div class="bsplit">
+        <div class="bside">
+          <details class="bg" open><summary>1 · Pool and market</summary><div class="bgb">
+            <div class="fld"><label for="sb-pool">Load a pool (fills the fields below)</label><div class="inp"><select id="sb-pool"><option value="">Custom inputs</option></select></div></div>
+            <div class="two">
+              <div class="fld"><label for="sb-cap">Capital</label><div class="inp"><input id="sb-cap" type="number" step="any" inputmode="decimal" value="40000"><span class="u">USD</span></div></div>
+              <div class="fld"><label for="sb-p0" title="Price of token 0 in token 1">Token 0 price</label><div class="inp"><input id="sb-p0" type="number" step="any" inputmode="decimal" value="2000"></div></div>
+            </div>
+            <div class="two">
+              <div class="fld"><label for="sb-vol">Daily volume</label><div class="inp"><input id="sb-vol" type="number" step="any" inputmode="decimal" value="3000000"><span class="u">USD</span></div></div>
+              <div class="fld"><label for="sb-tvl">Pool TVL</label><div class="inp"><input id="sb-tvl" type="number" step="any" inputmode="decimal" value="5000000"><span class="u">USD</span></div></div>
+            </div>
+            <div class="two">
+              <div class="fld"><label for="sb-spr" title="Spread traders pay. The Spreads tab shows real values.">Spread</label><div class="inp"><input id="sb-spr" type="number" step="any" inputmode="decimal" value="4"><span class="u">bps</span></div></div>
+              <div class="fld"><label for="sb-lam" title="How far from the current price most trading happens. Bigger = more volatile market.">Trading reach λ</label><div class="inp"><input id="sb-lam" type="number" step="any" inputmode="decimal" value="3" min="0.1"><span class="u">%</span></div></div>
+            </div>
+            <div class="two">
+              <div class="fld"><label for="sb-sl" title="0 = no stop-loss. Loaded from the pool when it has one.">Stop-loss limit</label><div class="inp"><input id="sb-sl" type="number" step="any" inputmode="decimal" value="3" min="0"><span class="u">% capital</span></div></div>
+              <div class="fld"><label for="sb-step">Bin step</label><div class="inp"><select id="sb-step"><option value="0.1">0.10%</option><option value="0.25" selected>0.25%</option><option value="0.5">0.50%</option><option value="1">1%</option><option value="2">2%</option></select></div></div>
+            </div>
+          </div></details>
 
-      <div class="sbgrid">
-        <div class="sbc"><span class="tg2" style="font:600 .7rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:#7BA0FF">Strategy A</span>
-          <div class="fld"><label for="sb-k0">Distribution</label><div class="inp"><select id="sb-k0"><option value="apr">APR Pro-Rata</option><option value="vol">Volume Pro-Rata</option><option value="exp" selected>Exponential</option><option value="flat">Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div></div>
-          <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r0v">±5%</b></div><input id="sb-r0" type="range" min="1" max="60" step="1" value="5"></div></div>
-        <div class="sbc"><span class="tg2" style="font:600 .7rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:#B25CF0">Strategy B</span>
-          <div class="fld"><label for="sb-k1">Distribution</label><div class="inp"><select id="sb-k1"><option value="apr">APR Pro-Rata</option><option value="vol">Volume Pro-Rata</option><option value="exp">Exponential</option><option value="flat" selected>Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div></div>
-          <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r1v">±25%</b></div><input id="sb-r1" type="range" min="1" max="60" step="1" value="25"></div></div>
-        <div class="sbc"><span class="tg2" style="font:600 .7rem var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:#36E3B2">Strategy C</span>
-          <div class="fld"><label for="sb-k2">Distribution</label><div class="inp"><select id="sb-k2"><option value="apr">APR Pro-Rata</option><option value="vol" selected>Volume Pro-Rata</option><option value="exp">Exponential</option><option value="flat">Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div></div>
-          <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r2v">±12%</b></div><input id="sb-r2" type="range" min="1" max="60" step="1" value="12"></div></div>
-      </div>
+          <details class="bg" open><summary>2 · Strategies to compare</summary><div class="bgb">
+            <div class="sbs"><span class="sbl" style="color:#7BA0FF">● Strategy A</span>
+              <div class="inp"><select id="sb-k0" aria-label="Distribution A"><option value="apr">APR Pro-Rata</option><option value="vol">Volume Pro-Rata</option><option value="exp" selected>Exponential</option><option value="flat">Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div>
+              <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r0v">±5%</b></div><input id="sb-r0" type="range" min="1" max="60" step="1" value="5"></div></div>
+            <div class="sbs"><span class="sbl" style="color:#B25CF0">● Strategy B</span>
+              <div class="inp"><select id="sb-k1" aria-label="Distribution B"><option value="apr">APR Pro-Rata</option><option value="vol">Volume Pro-Rata</option><option value="exp">Exponential</option><option value="flat" selected>Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div>
+              <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r1v">±25%</b></div><input id="sb-r1" type="range" min="1" max="60" step="1" value="25"></div></div>
+            <div class="sbs"><span class="sbl" style="color:#36E3B2">● Strategy C</span>
+              <div class="inp"><select id="sb-k2" aria-label="Distribution C"><option value="apr">APR Pro-Rata</option><option value="vol" selected>Volume Pro-Rata</option><option value="exp">Exponential</option><option value="flat">Flat</option><option value="single">Single bin</option><option value="inv">Inverted</option><option value="off">Off</option></select></div>
+              <div class="sl"><div class="top"><span>Range around price</span><b id="sb-r2v">±12%</b></div><input id="sb-r2" type="range" min="1" max="60" step="1" value="12"></div></div>
+          </div></details>
 
-      <div><h3 class="h3s" style="margin:6px 0 10px">Scenario</h3>
-        <div class="sgrid">
-          <div class="sl"><div class="top"><span>Token 0 price move</span><b id="sb-mv">-10%</b></div><input id="sb-m" type="range" min="-50" max="50" step="1" value="-10"></div>
-          <div class="sl"><div class="top"><span>Volume</span><b id="sb-vmv">×1.00</b></div><input id="sb-vm" type="range" min="0.25" max="4" step="0.05" value="1"></div>
-          <div class="sl"><div class="top"><span>Spread (curator quote)</span><b id="sb-smv">×1.0</b></div><input id="sb-sm" type="range" min="0.5" max="3" step="0.1" value="1"></div>
-          <div class="sl"><div class="top"><span>Curator fee share</span><b id="sb-csv">20%</b></div><input id="sb-cs" type="range" min="0" max="60" step="1" value="20"></div>
-          <div class="sl"><div class="top"><span>Holding period</span><b id="sb-dv">7 d</b></div><input id="sb-d" type="range" min="1" max="90" step="1" value="7"></div>
+          <details class="bg" open><summary>3 · Scenario</summary><div class="bgb">
+            <div class="btnrow" id="sb-pre"></div>
+            <div class="sl"><div class="top"><span>Token 0 price move</span><b id="sb-mv">-10%</b></div><input id="sb-m" type="range" min="-50" max="50" step="1" value="-10"></div>
+            <div class="sl"><div class="top"><span>Volume</span><b id="sb-vmv">×1.00</b></div><input id="sb-vm" type="range" min="0.25" max="4" step="0.05" value="1"></div>
+            <div class="sl"><div class="top"><span>Spread (curator quote)</span><b id="sb-smv">×1.0</b></div><input id="sb-sm" type="range" min="0.5" max="3" step="0.1" value="1"></div>
+            <div class="sl"><div class="top"><span>Curator fee share</span><b id="sb-csv">20%</b></div><input id="sb-cs" type="range" min="0" max="60" step="1" value="20"></div>
+            <div class="sl"><div class="top"><span>Holding period</span><b id="sb-dv">7 d</b></div><input id="sb-d" type="range" min="1" max="90" step="1" value="7"></div>
+          </div></details>
+
+          <details class="bg" open><summary>4 · Reference price jump</summary><div class="bgb">
+            <div class="sl"><div class="top"><span>Jump within one hour</span><b id="sb-jv">+5%</b></div><input id="sb-j" type="range" min="-20" max="20" step="1" value="5"></div>
+            <div class="sl"><div class="top"><span>Jump is split into</span><b id="sb-jkv">12 steps</b></div><input id="sb-jk" type="range" min="1" max="60" step="1" value="12"></div>
+          </div></details>
         </div>
-        <div class="btnrow" id="sb-pre" style="margin-top:12px"></div>
-      </div>
 
-      <div><h3 class="h3s" style="margin:6px 0 10px">Reference price jump (stress test)</h3>
-        <div class="sgrid">
-          <div class="sl"><div class="top"><span>Jump within one hour</span><b id="sb-jv">+5%</b></div><input id="sb-j" type="range" min="-20" max="20" step="1" value="5"></div>
-          <div class="sl"><div class="top"><span>Jump is split into</span><b id="sb-jkv">12 steps</b></div><input id="sb-jk" type="range" min="1" max="60" step="1" value="12"></div>
+        <div class="bmain">
+          <div id="sb-out"></div>
+          <details class="bg" style="margin-top:18px"><summary>How the model works</summary><div class="bgb"><p class="note" style="margin:0">Each bin is a price level: bins above the price hold token 0 and bins below hold token 1, and a trade crossing a bin converts it at that bin's price. Trading PnL is the position value minus holding the initial tokens, as in Edge Lab. Distributions: Flat is equal weight; Exponential fades from the price outward over a third of the range; Inverted puts more at the edges; Volume Pro-Rata follows where trades happen; APR Pro-Rata follows volume divided by the liquidity already there (flatter than volume); Single bin puts everything at the price. Fees: trading volume is spread over price levels with a Laplace shape (reach λ) that follows the price along a straight path to the scenario price, the pool's existing liquidity is assumed more spread out than volume, and you earn your share of each bin's fees, times the LP part of the spread (100% minus curator share minus Metric's share). Stop-loss: Metric's exact drawdown rule is not in the public data here, so the simulator treats the limit as Trading PnL loss as a percent of capital, checked after each step of the jump. Simplifications: the deposit goes straight into the chosen distribution with no cost for swapping into that mix, volume does not react to spread changes, and the price path is a line. Seven days of data can flip quickly. Not Metric's model and not financial advice.</p></div></details>
         </div>
       </div>
-
-      <div id="sb-out"></div>
-      <p class="note" style="margin:0">How the model works. Each bin is a price level: bins above the price hold token 0 and bins below hold token 1, and a trade crossing a bin converts it at that bin's price. Trading PnL is the position value minus holding the initial tokens, as in Edge Lab. Distributions: Flat is equal weight; Exponential fades from the price outward over a third of the range; Inverted puts more at the edges; Volume Pro-Rata follows where trades happen; APR Pro-Rata follows volume divided by the liquidity already there (flatter than volume); Single bin puts everything at the price. Fees: trading volume is spread over price levels with a Laplace shape (reach λ) that follows the price along a straight path to the scenario price, the pool's existing liquidity is assumed more spread out than volume, and you earn your share of each bin's fees, times the LP part of the spread (100% minus curator share minus Metric's share). Stop-loss: Metric's exact drawdown rule is not public in this data, so the simulator treats the stop-loss limit as Trading PnL loss as a percent of capital, checked after each step of the jump. Simplifications: the deposit is placed straight into the chosen distribution with no cost for swapping into that mix, volume does not react to spread changes, and the price path is a line. Seven days of data can flip quickly. Not Metric's model and not financial advice.</p>
     </div>
   </section>
  
@@ -1643,18 +1666,21 @@ function renderBins(){
   var velNote=selp&&selp.vel?' This pool also has a per-block price change limit, which can pause quotes during a fast jump. That is not modelled here.':'';
   var jtxt='If the reference price jumps '+sg(jj,'%')+' in 60 minutes ('+jk+' step'+(jk===1?'':'s')+(jk>1?' of '+nf(mins,1)+' min':'')+'), arbitrageurs fill your bins at stale prices. '+
     (env.thr>0?'The stop-loss is set at '+nf(env.thr,2)+'% of capital and is checked after every step.':'No stop-loss is set, so the loss runs through the whole jump.')+velNote;
+  var T0=BN.tab||'ov';
+  var tabs=[['ov','Overview'],['ch','Price chart'],['lq','Liquidity'],['gr','Scenario grid'],['js','Jump stress test']];
+  var tb='<div class="sbt" role="tablist">'+tabs.map(function(t){return '<button class="tg" type="button" role="tab" data-tab="'+t[0]+'" aria-pressed="'+(T0===t[0])+'">'+t[1]+'</button>'}).join('')+'</div>';
+  var pane=function(id,h){return '<div data-pane="'+id+'"'+(T0===id?'':' hidden')+'>'+h+'</div>'};
+  var gridHead='<tr><th class="n">Token 0 move</th>'+list.map(function(S){return '<th class="n"><span style="color:'+BCOL[S.idx]+'">●</span> '+esc(S.label)+'</th>'}).join('')+'</tr>';
   $('sb-out').innerHTML=
-    '<div class="verdict">'+verdict+'</div>'+
-    '<div class="tw"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>'+
-    '<h3 class="h3s">Net result versus holding, by final price</h3>'+
-    '<figure>'+binChartSVG(list,env,sc)+'</figure>'+'<div class="lg">'+leg+'</div>'+
-    '<h3 class="h3s">Where each strategy puts your liquidity</h3><div class="sbgrid">'+dist+'</div>'+
-    '<p class="note">Dashed white line: price now. Orange line: the scenario price. Bars left of the line hold token 1, bars right hold token 0, and traders convert them as the price crosses.</p>'+
-    '<h3 class="h3s">Scenario grid (net vs holding)</h3><div class="tw"><table><thead><tr><th class="n">Token 0 move</th>'+list.map(function(S){return '<th class="n"><span style="color:'+BCOL[S.idx]+'">●</span> '+esc(S.label)+'</th>'}).join('')+'</tr></thead><tbody>'+sc_rows+'</tbody></table></div>'+
-    '<h3 class="h3s">Stress test: reference price jump</h3><p class="note" style="margin:0 0 12px">'+esc(jtxt)+'</p>'+
-    '<div class="tw"><table><thead><tr><th>Strategy</th><th class="n">Trading PnL after full jump</th><th class="n">% of capital</th><th>Stop-loss</th><th class="n">Trading PnL if halted</th><th class="n" title="Position value minus deposit, including the market move of tokens you still hold">Position value change</th><th>Verdict</th></tr></thead><tbody>'+jrows+'</tbody></table></div>'+
-    '<h3 class="h3s">Loss by jump size (% of capital)</h3><div class="tw"><table><thead><tr><th class="n">Jump</th>'+list.map(function(S){return '<th class="n"><span style="color:'+BCOL[S.idx]+'">●</span> '+esc(S.label)+'</th>'}).join('')+'</tr></thead><tbody>'+grows+'</tbody></table></div>'+
-    '<p class="note">Red means the stop-loss limit is reached, yellow means more than half of it. Fees are ignored during the jump: it is short, and arbitrage flow pays no edge to LPs.</p>';
+    '<div class="verdict" style="margin-bottom:0">'+verdict+'</div>'+tb+
+    pane('ov','<div class="tw"><table><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>')+
+    pane('ch','<figure><figcaption>Net result versus holding (USD) by final price of token 0</figcaption>'+binChartSVG(list,env,sc)+'</figure><div class="lg">'+leg+'</div><p class="note">The dashed line is the scenario price you set on the left.</p>')+
+    pane('lq','<div class="sbgrid">'+dist+'</div><p class="note">Dashed white line: price now. Orange line: the scenario price. Bars left of the line hold token 1, bars right hold token 0, and traders convert them as the price crosses.</p>')+
+    pane('gr','<div class="tw"><table><thead>'+gridHead+'</thead><tbody>'+sc_rows+'</tbody></table></div><p class="note">Net vs holding for fixed price moves, using the volume, spread, curator share and period from the scenario. Green cell = best strategy for that row.</p>')+
+    pane('js','<p class="note" style="margin:0 0 12px">'+esc(jtxt)+'</p>'+
+      '<div class="tw"><table><thead><tr><th>Strategy</th><th class="n">Trading PnL after full jump</th><th class="n">% of capital</th><th>Stop-loss</th><th class="n">Trading PnL if halted</th><th class="n" title="Position value minus deposit, including the market move of tokens you still hold">Position value change</th><th>Verdict</th></tr></thead><tbody>'+jrows+'</tbody></table></div>'+
+      '<h3 class="h3s" style="margin-top:22px">Loss by jump size (% of capital)</h3><div class="tw"><table><thead>'+gridHead.replace('Token 0 move','Jump')+'</thead><tbody>'+grows+'</tbody></table></div>'+
+      '<p class="note">Red means the stop-loss limit is reached, yellow means more than half of it. Fees are ignored during the jump: it is short, and arbitrage flow pays no edge to LPs.</p>');
   LAST.bins='Bin Scenario Simulator'+(BN.pair?' (pool '+BN.pair+')':'')+': capital '+usd(env.D,0)+', token 0 price '+usd(env.P0)+', scenario token 0 '+sg(sc.m,'%')+', volume x'+nf(sc.vm,2)+', spread x'+nf(sc.sm,1)+', curator share '+nf(sc.cs,0)+'%, '+sc.days+' days.\n'+
     list.map(function(S,x){var r=res[x];return S.label+': fees '+usd(r.fees,0)+', trading PnL '+usd(r.pnl,0)+', net vs holding '+usd(r.net,0)+', fee APR '+pc(r.apr,1)+(r.inr?'':' (price outside range)')}).join('\n')+
     '\nJump test '+sg(jj,'%')+' in '+jk+' steps, stop-loss '+(env.thr>0?nf(env.thr,2)+'% of capital':'off')+': '+list.map(function(S,x){var r=jr[x];return S.label+' trading PnL '+usd(r.pnlFull,0)+(env.thr>0?(r.trig!==null?', stop-loss triggers at step '+r.trig+', loss if halted '+usd(r.pnlStop,0):', stop-loss not triggered'):'')}).join('; ');
@@ -1682,6 +1708,11 @@ var BSCEN=[['Calm, price flat',0,1,1,null,7],['Bull +20%, busy',20,2,1,null,7],[
   var ids=['sb-cap','sb-p0','sb-vol','sb-tvl','sb-spr','sb-lam','sb-step','sb-sl','sb-k0','sb-k1','sb-k2','sb-r0','sb-r1','sb-r2','sb-m','sb-vm','sb-sm','sb-cs','sb-d','sb-j','sb-jk'];
   ids.forEach(function(id){$(id).addEventListener('input',function(){renderBins()})});
   $('sb-pool').addEventListener('input',function(){binLoad(this.value);renderBins()});
+  $('sb-out').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-tab]');if(!b)return;BN.tab=b.getAttribute('data-tab');
+    [].forEach.call(this.querySelectorAll('button[data-tab]'),function(x){x.setAttribute('aria-pressed',String(x===b))});
+    [].forEach.call(this.querySelectorAll('[data-pane]'),function(p){p.hidden=p.getAttribute('data-pane')!==BN.tab});
+  });
   $('sb-pre').innerHTML=BSCEN.map(function(s,i){return '<button class="tg" type="button" data-i="'+i+'">'+esc(s[0])+'</button>'}).join('');
   $('sb-pre').addEventListener('click',function(e){
     var b=e.target.closest('button[data-i]');if(!b)return;var s=BSCEN[+b.getAttribute('data-i')];
