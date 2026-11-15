@@ -477,9 +477,9 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
       <button class="btn" id="g-copy" type="button">Copy summary to share</button>
     </div>
     <div class="tw"><table><thead><tr>
-      <th>Pool</th><th>Tier</th><th class="n">TVL</th><th class="n">7d APR</th><th class="n">Trading PnL APR</th><th class="n" title="7d APR minus Trading PnL APR, in percentage points">Gap (pts)</th><th>APR vs real</th><th class="n" title="Percentile of Trading PnL APR among the pools shown. 100 = best">Rank</th><th>Verdict</th>
+      <th>Pool</th><th>Tier</th><th class="n">TVL</th><th class="n">7d APR</th><th class="n">Trading PnL APR</th><th class="n" title="7d APR minus Trading PnL APR, in percentage points">Gap (pts)</th><th>APR vs real</th><th class="n" title="Same as Trading PnL APR">Yield used</th><th class="n" title="Percentile of Trading PnL APR among the pools shown. 100 = best">Rank</th><th>Verdict</th>
     </tr></thead><tbody id="gp-body"></tbody></table></div>
-    <p class="note">Verdict: <b>Below hold</b> = Trading PnL APR is below 0 (LPs did worse than simply holding over 7 days; red only when it is worse than -5%). <b>Reduced</b> = less than half of the headline APR survives. <b>Holds up</b> = at least half survives. The Rank column compares each pool with the others in this list, so you can still find the best option when the whole market is red. Annualizing 7 days exaggerates numbers, so anything beyond ±500% is shown capped. One week can flip next week: treat this as a signal to check, not a verdict. Click a row for the full risk scan.</p>
+    <p class="note"><b>How to read the two numbers:</b> 7d APR is the fee income LPs earned, before price moves. Trading PnL APR is the all-in result: how much more or less LPs have than if they had simply held the tokens, valued at today's prices (Metric's own definition). Spread income is already inside it, so the two are never added together. <b>Below hold</b> = Trading PnL APR is below 0 (LPs did worse than simply holding over 7 days; red only when it is worse than -5%). <b>Reduced</b> = less than half of the headline APR survives. <b>Holds up</b> = at least half survives. The Rank column compares each pool with the others in this list, so you can still find the best option when the whole market is red. Annualizing 7 days exaggerates numbers, so anything beyond ±500% is shown capped. One week can flip next week: treat this as a signal to check, not a verdict. Click a row for the full risk scan.</p>
   </section>
  
   <!-- COMPARE: pool DNA for one pool, pool duel for two -->
@@ -628,7 +628,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
 
         <div class="bmain">
           <div id="sb-out"></div>
-          <details class="bg" style="margin-top:18px"><summary>How the model works</summary><div class="bgb"><p class="note" style="margin:0">Each bin is a price level: bins above the price hold token 0 and bins below hold token 1, and a trade crossing a bin converts it at that bin's price. Trading PnL is the position value minus holding the initial tokens, as in Edge Lab. Distributions: Flat is equal weight; Exponential fades from the price outward over a third of the range; Inverted puts more at the edges; Volume Pro-Rata follows where trades happen; APR Pro-Rata follows volume divided by the liquidity already there (flatter than volume); Single bin puts everything at the price. Fees: trading volume is spread over price levels with a Laplace shape (reach λ) that follows the price along a straight path to the scenario price, the pool's existing liquidity is assumed more spread out than volume, and you earn your share of each bin's fees, times the LP part of the spread (100% minus curator share minus Metric's share). Stop-loss: Metric's exact drawdown rule is not in the public data here, so the simulator treats the limit as Trading PnL loss as a percent of capital, checked after each step of the jump. Simplifications: the deposit goes straight into the chosen distribution with no cost for swapping into that mix, volume does not react to spread changes, and the price path is a line. Seven days of data can flip quickly. Not Metric's model and not financial advice.</p></div></details>
+          <details class="bg" style="margin-top:18px"><summary>How the model works</summary><div class="bgb"><p class="note" style="margin:0">Each bin is a price level: bins above the price hold token 0 and bins below hold token 1, and a trade crossing a bin converts it at that bin's price. Trading PnL here is the position value minus holding the initial tokens, converted at each bin's mid price. Fees are modelled separately and added on top as "net vs holding"; on Metric's live numbers the spread income is already inside Trading PnL, so do not compare this net figure directly with a pool's Trading PnL APR. Distributions: Flat is equal weight; Exponential fades from the price outward over a third of the range; Inverted puts more at the edges; Volume Pro-Rata follows where trades happen; APR Pro-Rata follows volume divided by the liquidity already there (flatter than volume); Single bin puts everything at the price. Fees: trading volume is spread over price levels with a Laplace shape (reach λ) that follows the price along a straight path to the scenario price, the pool's existing liquidity is assumed more spread out than volume, and you earn your share of each bin's fees, times the LP part of the spread (100% minus curator share minus Metric's share). Stop-loss: Metric's exact drawdown rule is not in the public data here, so the simulator treats the limit as Trading PnL loss as a percent of capital, checked after each step of the jump. Simplifications: the deposit goes straight into the chosen distribution with no cost for swapping into that mix, volume does not react to spread changes, and the price path is a line. Seven days of data can flip quickly. Not Metric's model and not financial advice.</p></div></details>
         </div>
       </div>
     </div>
@@ -1077,11 +1077,13 @@ function renderEdge0(anim){
 function gapList(ch,min){
   return S.pools.filter(function(p){
     return p.apr!=null&&p.pnl!=null&&(p.tvl||0)>=min&&(ch==='all'||String(p.chainId)===String(ch));
-  }).map(function(p){return {p:p,gap:p.apr-p.pnl}});
+  }).map(function(p){return {p:p,gap:p.apr-p.pnl,eff:GB==='net'?p.apr+p.pnl:p.pnl}});
 }
-function gapVerdict(p){
-  if(p.pnl<0)return [p.pnl<-5?'b-r':'b-y','Below hold'];
-  if(p.apr>0&&p.pnl<p.apr*0.5)return ['b-y','Reduced'];
+var GB='pnl'; /* Trading PnL already includes spread income (edge), so fees are never added on top */
+function gapVerdict(p,eff){
+  if(eff==null)eff=p.pnl;
+  if(eff<0)return [eff<-5?'b-r':'b-y',GB==='net'?'Net loss':'Below hold'];
+  if(p.apr>0&&eff<p.apr*0.5)return ['b-y','Reduced'];
   return ['b-g','Holds up'];
 }
 var GAPSHOT=[];
@@ -1091,39 +1093,39 @@ function renderGap(){
   var byGap=all.slice().sort(function(a,b){return b.gap-a.gap});
   GAPSHOT=byGap;
   var L=all.slice();
-  if(view==='ill')L=L.filter(function(r){return r.p.pnl<0});
-  if(view==='pos')L=L.filter(function(r){return r.p.pnl>=0});
-  if(view==='win'||view==='pos')L.sort(function(a,b){return b.p.pnl-a.p.pnl});
+  if(view==='ill')L=L.filter(function(r){return r.eff<0});
+  if(view==='pos')L=L.filter(function(r){return r.eff>=0});
+  if(view==='win'||view==='pos')L.sort(function(a,b){return b.eff-a.eff});
   else L.sort(function(a,b){return b.gap-a.gap});
   var tvl=0,wa=0,wp=0,neg=0,negTvl=0;
-  all.forEach(function(r){var t=r.p.tvl||0;tvl+=t;wa+=r.p.apr*t;wp+=r.p.pnl*t;if(r.p.pnl<0){neg++;negTvl+=t}});
+  all.forEach(function(r){var t=r.p.tvl||0;tvl+=t;wa+=r.p.apr*t;wp+=r.eff*t;if(r.eff<0){neg++;negTvl+=t}});
   setTiles($('gp-tiles'),
     tile('Pools analyzed',cnt(all.length,'int','gp-n'),null,0)+
     tile('7d APR (TVL-weighted)',tvl?cnt(wa/tvl,'pc1','gp-apr'):'—',null,1)+
-    tile('Trading PnL APR (TVL-weighted)',tvl?cnt(wp/tvl,'spc1','gp-pnl',tone(wp)):'—',null,2)+
+    tile((GB==='net'?'Fees + Trading PnL APR':'Trading PnL APR')+' (TVL-weighted)',tvl?cnt(wp/tvl,'spc1','gp-pnl',tone(wp)):'—',null,2)+
     tile('Pools in profit vs holding',cnt(all.length-neg,'int','gp-pos',all.length-neg?'pos':''),null,3)+
     tile('Pools below hold',cnt(neg,'int','gp-neg',neg?'wn':''),null,3)+
     tile('TVL inside pools below hold',cnt(negTvl,'cu','gp-negtvl',negTvl?'wn':''),null,4));
-  var srt=all.map(function(r){return r.p.pnl}).sort(function(a,b){return a-b});
+  var srt=all.map(function(r){return r.eff}).sort(function(a,b){return a-b});
   var rankOf=function(v){var n=srt.length;if(n<2)return 100;var c=0;srt.forEach(function(x){if(x<v)c++});return Math.round(c/(n-1)*100)};
   var show=L.slice(0,80);
   qx($('gp-body'));
   $('gp-body').innerHTML=show.length?show.map(function(r,i){
-    var p=r.p,d=Math.min(i,14),v=gapVerdict(p);
+    var p=r.p,d=Math.min(i,14),v=gapVerdict(p,r.eff);
     var den=Math.max(Math.abs(p.apr),Math.abs(p.pnl),0.0001);
     var wA=Math.max(2,Math.abs(p.apr)/den*100),wP=Math.max(2,Math.abs(p.pnl)/den*100);
     return '<tr class="clk" style="--i:'+d+'" data-id="'+esc(p.id)+'" tabindex="0"><td class="pr"><b>'+esc(p.pair)+'</b><span>'+esc(chainLabel(p.chainId))+' · '+esc(short(p.addr))+'</span></td>'+
       '<td>'+tierBadge(p.tier)+'</td><td class="n">'+cu(p.tvl)+'</td><td class="n">'+pc(p.apr,1)+'</td>'+
       '<td class="n '+tone(p.pnl)+'">'+spc(p.pnl,1)+'</td><td class="n">'+nf(r.gap,1)+'</td>'+
       '<td><div class="dual" title="Top bar: headline APR. Bottom bar: Trading PnL APR."><i style="--w:'+wA.toFixed(0)+'%"></i><i class="'+(p.pnl<0?'n':'p')+'" style="--w:'+wP.toFixed(0)+'%"></i></div></td>'+
-      '<td class="n">'+rankOf(p.pnl)+'</td><td><span class="badge '+v[0]+'">'+v[1]+'</span></td></tr>';
-  }).join(''):'<tr><td colspan="9"><div class="empty">No pools match these filters.</div></td></tr>';
+      '<td class="n '+tone(r.eff)+'">'+spc(r.eff,1)+'</td><td class="n">'+rankOf(r.eff)+'</td><td><span class="badge '+v[0]+'">'+v[1]+'</span></td></tr>';
+  }).join(''):'<tr><td colspan="10"><div class="empty">No pools match these filters.</div></td></tr>';
 }
 function gapSummaryText(){
   var top=GAPSHOT.slice(0,5);
   if(!top.length)return '';
   var lines=top.map(function(r,i){var p=r.p;
-    return (i+1)+'. '+p.pair+' ('+chainLabel(p.chainId)+'): headline APR '+pc(p.apr,1)+' → real '+spc(p.pnl,1)+' · TVL '+cu(p.tvl)});
+    return (i+1)+'. '+p.pair+' ('+chainLabel(p.chainId)+'): headline APR '+pc(p.apr,1)+' → Trading PnL APR '+spc(p.pnl,1)+' · TVL '+cu(p.tvl)});
   return 'Metric Compass · APR Reality Gap (7d)\nBiggest gaps between headline APR and Trading PnL APR:\n'+lines.join('\n')+'\n\nCommunity tool, not financial advice. '+location.href.split('#')[0];
 }
  
@@ -2082,7 +2084,7 @@ function ctx(){
   var v=function(id){return $(id).value};
   L.push('Edge Lab inputs: token0='+v('e-s0')+', token1='+v('e-s1')+', deposited '+v('e-q0')+' / '+v('e-q1')+', token0 price at deposit='+v('e-p0')+', traders '+v('e-dir')+' token0, size='+v('e-s')+', avg fill price='+v('e-x')+'. Tiles: '+$('e-tiles').innerText.replace(/\s+/g,' ')+' Verdict: '+$('e-v').innerText);
   var gl=gapList('all',100000).sort(function(a,b){return b.gap-a.gap}).slice(0,10);
-  if(gl.length)L.push('APR Reality Gap (pools with TVL>=$100K, biggest gap first; gap = 7d APR minus Trading PnL APR, in points):\n'+gl.map(function(r){return r.p.pair+' ['+chainLabel(r.p.chainId)+'] APR '+pc(r.p.apr,1)+' vs Trading PnL APR '+spc(r.p.pnl,1)+' gap '+nf(r.gap,1)+' verdict '+gapVerdict(r.p)[1]}).join('\n'));
+  if(gl.length)L.push('APR Reality Gap (pools with TVL>=$100K, biggest gap first; gap = 7d APR minus Trading PnL APR, in points):\n'+gl.map(function(r){return r.p.pair+' ['+chainLabel(r.p.chainId)+'] APR '+pc(r.p.apr,1)+' vs Trading PnL APR '+spc(r.p.pnl,1)+' gap '+nf(r.gap,1)+' verdict '+gapVerdict(r.p,r.eff)[1]}).join('\n'));
   if($('st-tiles'))L.push('Edge Lab position stress test: token0 move '+$('st-p0v').textContent+', token1 move '+$('st-p1v').textContent+', trade repeats '+$('st-nv').textContent+'. Result: '+$('st-tiles').innerText.replace(/\s+/g,' ')+' '+$('st-note').textContent);
   if(LAST.dna)L.push('Pool DNA (six 0-100 traits) for Pool A in the Compare tab:\n'+LAST.dna);
   if(LAST.duel)L.push('Pool duel currently shown in the Compare tab:\n'+LAST.duel);
