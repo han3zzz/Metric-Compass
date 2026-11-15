@@ -473,13 +473,13 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
     <div class="bar">
       <div class="fld"><label for="g-chain">Chain</label><div class="inp"><select id="g-chain"><option value="all">All</option></select></div></div>
       <div class="fld"><label for="g-min">Min TVL</label><div class="inp"><select id="g-min"><option value="0" selected>No minimum</option><option value="10000">$10K</option><option value="100000">$100K</option><option value="1000000">$1M</option></select></div></div>
-      <div class="fld"><label for="g-view">Show</label><div class="inp"><select id="g-view"><option value="gap">Biggest gap first</option><option value="win">Best real yield first</option><option value="ill">Only illusions (PnL below 0)</option></select></div></div>
+      <div class="fld"><label for="g-view">Show</label><div class="inp"><select id="g-view"><option value="gap">Biggest gap first</option><option value="win">Best real yield first</option><option value="pos">Only pools in profit vs hold</option><option value="ill">Only pools below hold (PnL below 0)</option></select></div></div>
       <button class="btn" id="g-copy" type="button">Copy summary to share</button>
     </div>
     <div class="tw"><table><thead><tr>
-      <th>Pool</th><th>Tier</th><th class="n">TVL</th><th class="n">7d APR</th><th class="n">Trading PnL APR</th><th class="n" title="7d APR minus Trading PnL APR, in percentage points">Gap (pts)</th><th>APR vs real</th><th>Verdict</th>
+      <th>Pool</th><th>Tier</th><th class="n">TVL</th><th class="n">7d APR</th><th class="n">Trading PnL APR</th><th class="n" title="7d APR minus Trading PnL APR, in percentage points">Gap (pts)</th><th>APR vs real</th><th class="n" title="Percentile of Trading PnL APR among the pools shown. 100 = best">Rank</th><th>Verdict</th>
     </tr></thead><tbody id="gp-body"></tbody></table></div>
-    <p class="note">Verdict: <b>Illusion</b> = Trading PnL APR is below 0 (LPs lost versus holding). <b>Eroded</b> = less than half of the headline APR survives. <b>Holds up</b> = at least half survives. Both numbers cover only 7 days, so a pool can flip next week. Treat this as a warning sign, not a verdict. Click a row for the full risk scan.</p>
+    <p class="note">Verdict: <b>Below hold</b> = Trading PnL APR is below 0 (LPs did worse than simply holding over 7 days; red only when it is worse than -5%). <b>Reduced</b> = less than half of the headline APR survives. <b>Holds up</b> = at least half survives. The Rank column compares each pool with the others in this list, so you can still find the best option when the whole market is red. Annualizing 7 days exaggerates numbers, so anything beyond ±500% is shown capped. One week can flip next week: treat this as a signal to check, not a verdict. Click a row for the full risk scan.</p>
   </section>
  
   <!-- COMPARE: pool DNA for one pool, pool duel for two -->
@@ -522,7 +522,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
     <div class="tiles" id="pf-tiles"></div>
     <div id="pf-out"></div>
     <div class="btnrow" style="margin-top:14px"><button class="btn pri" id="p-copy" type="button">Copy plan as text</button></div>
-    <p class="note">Only quotable, active pools where LPs did not lose versus holding over 7 days (Trading PnL APR of 0 or more) are considered. Picks are spread across curators and avoid stacking the same volatile token. Yield figures are a 7-day snapshot annualized, not a forecast. The basket stress test uses a simpler model than the position stress test in Edge Lab (see the note above its table). Not financial advice.</p>
+    <p class="note">Only quotable, active pools where LPs did not lose versus holding over 7 days (Trading PnL APR of 0 or more) are considered. If too few qualify, pools down to -3% are added and the plan says so. Picks are spread across curators and avoid stacking the same volatile token. Yield figures are a 7-day snapshot annualized, not a forecast. The basket stress test uses a simpler model than the position stress test in Edge Lab (see the note above its table). Not financial advice.</p>
   </section>
 
   <!-- EDGE LAB -->
@@ -695,8 +695,9 @@ function short(a){return a?String(a).slice(0,6)+'…'+String(a).slice(-4):'—'}
 function nf(v,d){d=d===undefined?2:d;return (v==null||!isFinite(v))?'—':v.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d})}
 function cu(v){if(v==null||!isFinite(v))return '—';var a=Math.abs(v);var s=a>=1e9?nf(a/1e9,2)+'B':a>=1e6?nf(a/1e6,2)+'M':a>=1e3?nf(a/1e3,1)+'K':nf(a,0);return (v<0?'-':'')+'$'+s}
 function usd(v,d){if(v==null||!isFinite(v))return '—';return (v<0?'-':'')+'$'+nf(Math.abs(v),d===undefined?2:d)}
-function pc(v,d){return (v==null||!isFinite(v))?'—':nf(v,d===undefined?2:d)+'%'}
-function spc(v,d){return (v==null||!isFinite(v))?'—':(v>0?'+':'')+nf(v,d===undefined?2:d)+'%'}
+var CAPV=500;
+function pc(v,d){if(v!=null&&isFinite(v)&&Math.abs(v)>CAPV)return (v>0?'>':'<-')+CAPV+'%';return (v==null||!isFinite(v))?'—':nf(v,d===undefined?2:d)+'%'}
+function spc(v,d){if(v!=null&&isFinite(v)&&Math.abs(v)>CAPV)return (v>0?'>+':'<-')+CAPV+'%';return (v==null||!isFinite(v))?'—':(v>0?'+':'')+nf(v,d===undefined?2:d)+'%'}
 function toNum(v){if(v==null||v==='')return null;var n=Number(v);return isFinite(n)?n:null}
 function tone(v){return v>0?'pos':v<0?'neg':''}
 function ageText(ts){if(!ts)return '—';var d=(Date.now()/1000-ts)/86400;if(d<1)return '<1 day';if(d<60)return Math.floor(d)+' days';if(d<730)return Math.floor(d/30)+' mo';return nf(d/365,1)+' yr'}
@@ -1079,8 +1080,8 @@ function gapList(ch,min){
   }).map(function(p){return {p:p,gap:p.apr-p.pnl}});
 }
 function gapVerdict(p){
-  if(p.pnl<0)return ['b-r','Illusion'];
-  if(p.apr>0&&p.pnl<p.apr*0.5)return ['b-y','Eroded'];
+  if(p.pnl<0)return [p.pnl<-5?'b-r':'b-y','Below hold'];
+  if(p.apr>0&&p.pnl<p.apr*0.5)return ['b-y','Reduced'];
   return ['b-g','Holds up'];
 }
 var GAPSHOT=[];
@@ -1091,7 +1092,8 @@ function renderGap(){
   GAPSHOT=byGap;
   var L=all.slice();
   if(view==='ill')L=L.filter(function(r){return r.p.pnl<0});
-  if(view==='win')L.sort(function(a,b){return b.p.pnl-a.p.pnl});
+  if(view==='pos')L=L.filter(function(r){return r.p.pnl>=0});
+  if(view==='win'||view==='pos')L.sort(function(a,b){return b.p.pnl-a.p.pnl});
   else L.sort(function(a,b){return b.gap-a.gap});
   var tvl=0,wa=0,wp=0,neg=0,negTvl=0;
   all.forEach(function(r){var t=r.p.tvl||0;tvl+=t;wa+=r.p.apr*t;wp+=r.p.pnl*t;if(r.p.pnl<0){neg++;negTvl+=t}});
@@ -1099,8 +1101,11 @@ function renderGap(){
     tile('Pools analyzed',cnt(all.length,'int','gp-n'),null,0)+
     tile('7d APR (TVL-weighted)',tvl?cnt(wa/tvl,'pc1','gp-apr'):'—',null,1)+
     tile('Trading PnL APR (TVL-weighted)',tvl?cnt(wp/tvl,'spc1','gp-pnl',tone(wp)):'—',null,2)+
-    tile('Pools losing versus holding',cnt(neg,'int','gp-neg',neg?'neg':''),null,3)+
-    tile('TVL inside those pools',cnt(negTvl,'cu','gp-negtvl',negTvl?'neg':''),null,4));
+    tile('Pools in profit vs holding',cnt(all.length-neg,'int','gp-pos',all.length-neg?'pos':''),null,3)+
+    tile('Pools below hold',cnt(neg,'int','gp-neg',neg?'wn':''),null,3)+
+    tile('TVL inside pools below hold',cnt(negTvl,'cu','gp-negtvl',negTvl?'wn':''),null,4));
+  var srt=all.map(function(r){return r.p.pnl}).sort(function(a,b){return a-b});
+  var rankOf=function(v){var n=srt.length;if(n<2)return 100;var c=0;srt.forEach(function(x){if(x<v)c++});return Math.round(c/(n-1)*100)};
   var show=L.slice(0,80);
   qx($('gp-body'));
   $('gp-body').innerHTML=show.length?show.map(function(r,i){
@@ -1111,8 +1116,8 @@ function renderGap(){
       '<td>'+tierBadge(p.tier)+'</td><td class="n">'+cu(p.tvl)+'</td><td class="n">'+pc(p.apr,1)+'</td>'+
       '<td class="n '+tone(p.pnl)+'">'+spc(p.pnl,1)+'</td><td class="n">'+nf(r.gap,1)+'</td>'+
       '<td><div class="dual" title="Top bar: headline APR. Bottom bar: Trading PnL APR."><i style="--w:'+wA.toFixed(0)+'%"></i><i class="'+(p.pnl<0?'n':'p')+'" style="--w:'+wP.toFixed(0)+'%"></i></div></td>'+
-      '<td><span class="badge '+v[0]+'">'+v[1]+'</span></td></tr>';
-  }).join(''):'<tr><td colspan="8"><div class="empty">No pools match these filters.</div></td></tr>';
+      '<td class="n">'+rankOf(p.pnl)+'</td><td><span class="badge '+v[0]+'">'+v[1]+'</span></td></tr>';
+  }).join(''):'<tr><td colspan="9"><div class="empty">No pools match these filters.</div></td></tr>';
 }
 function gapSummaryText(){
   var top=GAPSHOT.slice(0,5);
@@ -1181,7 +1186,7 @@ function curScore(p){var g=curStat(p);return Math.round((p.verified?50:0)+30*(g.
 function archetype(p,v){
   var y=v[0],s=v[1],d=v[2],st=v[3],a=v[4],known=v.filter(function(x){return x!=null}),mn=Math.min.apply(null,known);
   if(y==null)return {n:'No yield data',t:'w',d:'No 7-day yield figures yet. The pool may be new, paused or its price feed is down.'};
-  if(p.pnl<0)return {n:'Yield illusion',t:'r',d:'Fees look fine, but price moves cost LPs more than they earn. Trading PnL is negative.'};
+  if(p.pnl<0)return {n:'Below hold (7d)',t:p.pnl<-5?'r':'w',d:'Over the last 7 days this pool did worse than simply holding the tokens. One week is noisy, so check how far below and whether it is a one-off price move.'};
   if(s<45&&y>=50)return {n:'High yield, fragile',t:'r',d:'Rich on paper, but the safety checks are weak. If you go in, keep the size small.'};
   if(d<30&&a!=null&&a<35)return {n:'Fresh and thin',t:'w',d:'New and shallow. Expect big swings in quotes and returns.'};
   if(mn>=45&&s>=65)return {n:'Balanced all-rounder',t:'g',d:'No weak spot: decent yield, solid safety, depth and track record.'};
@@ -1443,10 +1448,12 @@ function whyPicked(d){
 }
 function buildPlan(cap,prof,want,chain){
   var P=PROF[prof],note='';
+  var minPnl=0;
   function cands(tiers,ms){return S.pools.filter(function(p){
-    return p.status==='healthy'&&!p.paused&&(p.tvl||0)>=P.minTvl&&p.pnl!=null&&p.pnl>=0&&p.apr!=null&&p.score>=ms&&tiers.indexOf(p.tier)>=0&&(chain==='all'||String(p.chainId)===String(chain))})}
+    return p.status==='healthy'&&!p.paused&&(p.tvl||0)>=P.minTvl&&p.pnl!=null&&p.pnl>=minPnl&&p.apr!=null&&p.score>=ms&&tiers.indexOf(p.tier)>=0&&(chain==='all'||String(p.chainId)===String(chain))})}
   var tiers=P.tiers,ms=P.minScore,list=cands(tiers,ms);
   if(list.length<want&&P.relax.length){tiers=tiers.concat(P.relax);ms=Math.min(ms,60);list=cands(tiers,ms);note='Not enough green pools passed the filters, so yellow-tier pools with a safety score of 60 or more were added.'}
+  if(list.length<want){minPnl=-3;list=cands(tiers,ms);note=(note?note+' ':'')+'Few pools were in profit versus holding, so pools within 3% below break-even (Trading PnL APR of -3% or more) were included. Treat this as the least-bad choice, not a strong signal.'}
   var items=list.map(function(p){var d=dnaOf(p),r=0;d.v.forEach(function(x,i){r+=P.w[i]*(x==null?50:x)});return {p:p,d:d,rank:r,adj:r}});
   var picks=[],pool=items.slice();
   while(picks.length<want&&pool.length){
