@@ -439,16 +439,16 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
       <div class="fld"><label for="f-min">Min TVL</label><div class="inp"><select id="f-min"><option value="0" selected>No minimum</option><option value="10000">$10K</option><option value="100000" >$100K</option><option value="1000000">$1M</option></select></div></div>
       <div class="fld"><label for="f-per">APR period</label><div class="inp"><select id="f-per"><option value="24h">24H</option><option value="7d" selected>7D</option><option value="30d">30D</option><option value="all">All-time</option></select></div></div>
       <div class="fld"><label for="f-hor">Markout</label><div class="inp"><select id="f-hor"><option value="1m">1m</option><option value="5m" selected>5m</option><option value="30m">30m</option></select></div></div>
-      <div class="fld"><label for="f-sort">Sort by</label><div class="inp"><select id="f-sort"><option value="tvl">TVL</option><option value="mapr">APR (Markout)</option><option value="apr">aprBps7d</option><option value="pnl">Trading PnL APR</option><option value="vol">24h volume</option><option value="score">Safety score</option><option value="new">Newest</option></select></div></div>
+      <div class="fld"><label for="f-sort">Sort by</label><div class="inp"><select id="f-sort"><option value="tvl">TVL</option><option value="mapr">APR (Markout)</option><option value="pnl">Trading PnL APR</option><option value="vol">24h volume</option><option value="score">Safety score</option><option value="new">Newest</option></select></div></div>
       <div class="fld grow"><label for="f-q">Search</label><div class="inp"><input id="f-q" type="search" placeholder="Pair, curator or address"></div></div>
       <label class="chk"><input id="f-healthy" type="checkbox"> Quotable pools only</label>
       <label class="chk"><input id="f-locked" type="checkbox"> Locked pricing only</label>
     </div>
     <div class="tw"><table><thead><tr>
-      <th>Pool</th><th>Tier</th><th>Status</th><th class="n">TVL</th><th class="n">24h vol</th><th class="n" title="Markout APR, the APR shown in the Metric app. Period and horizon follow the two selectors above (Metric default: 7D, 5m).">APR (Markout)</th><th class="n" title="API field aprBps7d. Not the APR shown in the Metric app, and its exact definition is not in the public docs.">aprBps7d</th><th class="n" title="Matches the Trading PnL APR shown on the Metric app (Analytics tab, 7D): Trading PnL versus holding the tokens, annualized. It appears to be divided by pool TVL (an inference, not stated in the docs). The value drifts over time because the 7-day window rolls.">Trading PnL APR</th><th>Safety</th><th class="n">Age</th>
+      <th>Pool</th><th>Tier</th><th>Status</th><th class="n">TVL</th><th class="n">24h vol</th><th class="n" title="Markout APR, the APR shown in the Metric app. Period and horizon follow the two selectors above (Metric default: 7D, 5m).">APR (Markout)</th><th class="n" title="Matches the Trading PnL APR shown on the Metric app (Analytics tab, 7D): Trading PnL versus holding the tokens, annualized. It appears to be divided by pool TVL (an inference, not stated in the docs). The value drifts over time because the 7-day window rolls.">Trading PnL APR</th><th>Safety</th><th class="n">Age</th>
     </tr></thead><tbody id="pl-body"></tbody></table></div>
     <button class="btn more" id="pl-more" type="button" hidden>Show more</button>
-    <p class="note"><b>APR (Markout)</b> is the APR shown in the Metric app: markout divided by the liquidity of bins that traded in the period, annualized (per Metric docs). Pick the same period and markout horizon as in the app's Settings to match it. It shows a dash when under 70% of volume can be priced. <b>aprBps7d</b> and <b>Trading PnL APR</b> are raw API fields whose exact definitions are not in the public docs, so do not compare them directly with the app\'s APR.<br><b>Note on Trading PnL APR:</b> this matches the Trading PnL APR on the Metric app (Analytics tab), where Trading PnL is the change in your token balances valued at today's prices, compared with simply holding what you deposited. It appears to be divided by pool TVL and annualized (an inference from Metric's own numbers, not stated in the docs). The value drifts over time because the 7-day window rolls. The <b>aprBps7d</b> column is different: it is not the APR shown in the app and its definition is not in the public docs.</p>
+    <p class="note"><b>APR (Markout)</b> is the APR shown in the Metric app: markout divided by the liquidity of bins that traded in the period, annualized (per Metric docs). Pick the same period and markout horizon as in the app's Settings to match it. It shows a dash when under 70% of volume can be priced. <b>aprBps7d</b> and <b>Trading PnL APR</b> are raw API fields whose exact definitions are not in the public docs, so do not compare them directly with the app\'s APR.<br><b>Note on Trading PnL APR:</b> this matches the Trading PnL APR on the Metric app (Analytics tab), where Trading PnL is the change in your token balances valued at today's prices, compared with simply holding what you deposited. It appears to be divided by pool TVL and annualized (an inference from Metric's own numbers, not stated in the docs). The value drifts over time because the 7-day window rolls.</p>
   </section>
  
   <!-- RISK SCAN -->
@@ -926,7 +926,7 @@ function renderPools(){
     return true;
   });
   var key=$('f-sort').value;
-  var val={tvl:function(p){return p.tvl},mapr:function(p){return mapr(p)},apr:function(p){return p.apr},pnl:function(p){return p.pnl},vol:function(p){return p.vol},score:function(p){return p.score},new:function(p){return p.created}}[key];
+  var val={tvl:function(p){return p.tvl},mapr:function(p){return mapr(p)},pnl:function(p){return p.pnl},vol:function(p){return p.vol},score:function(p){return p.score},new:function(p){return p.created}}[key];
   L.sort(function(a,b){var x=val(a),y=val(b);if(x==null)x=-Infinity;if(y==null)y=-Infinity;return y-x});
   var tvl=0,vol=0,gr=0;L.forEach(function(p){tvl+=p.tvl||0;vol+=p.vol||0;if(p.tier==='green')gr+=p.tvl||0});
   setTiles($('pl-tiles'),
@@ -939,9 +939,9 @@ function renderPools(){
     return '<tr class="clk" style="--i:'+d+'" data-id="'+esc(p.id)+'" tabindex="0"><td class="pr"><b>'+esc(p.pair)+'</b><span>'+esc(chainLabel(p.chainId))+' · '+esc(short(p.addr))+'</span></td>'+
       '<td>'+tierBadge(p.tier)+'</td><td>'+statusCell(p.status)+'</td>'+
       '<td class="n">'+cu(p.tvl)+'</td><td class="n">'+cu(p.vol)+'</td>'+
-      '<td class="n '+tone(mapr(p))+'">'+spc(mapr(p),1)+'</td><td class="n">'+pc(p.apr,1)+'</td><td class="n '+tone(p.pnl)+'">'+spc(p.pnl,1)+'</td>'+
+      '<td class="n '+tone(mapr(p))+'">'+spc(mapr(p),1)+'</td><td class="n '+tone(p.pnl)+'">'+spc(p.pnl,1)+'</td>'+
       '<td>'+scoreCell(p.score,d)+'</td><td class="n">'+ageText(p.created)+'</td></tr>';
-  }).join(''):'<tr><td colspan="10"><div class="empty">No pools match these filters.</div></td></tr>';
+  }).join(''):'<tr><td colspan="9"><div class="empty">No pools match these filters.</div></td></tr>';
   $('pl-more').hidden=L.length<=S.limit;
 }
  
@@ -993,7 +993,7 @@ function renderRisk(){
   box.innerHTML=
     '<div class="split"><div class="panel">'+
       '<div class="tiles" style="margin:0"><div class="tile big"><span class="tl">'+esc(p.pair)+' · '+esc(chainLabel(p.chainId))+'</span><div class="meter"><div class="big" style="color:'+col+'">'+cnt(sc,'int','rk-score')+'<small> / 100 safety score</small></div><div class="track"><div style="width:'+sc+'%;background:'+col+'"></div></div></div></div>'+
-      tile('TVL',cnt(p.tvl,'cu','rk-tvl'),null,1)+tile('APR (Markout '+MK.p+', '+MK.h+')',cnt(mapr(p),'spc1','rk-mapr',tone(mapr(p))),null,2)+tile('aprBps7d',cnt(p.apr,'pc1','rk-apr'),null,2)+
+      tile('TVL',cnt(p.tvl,'cu','rk-tvl'),null,1)+tile('APR (Markout '+MK.p+', '+MK.h+')',cnt(mapr(p),'spc1','rk-mapr',tone(mapr(p))),null,2)+
       tile('<span title="'+'Matches the Trading PnL APR shown on the Metric app (Analytics tab, 7D): Trading PnL versus holding the tokens, annualized. It appears to be divided by pool TVL (an inference, not stated in the docs). The value drifts over time because the 7-day window rolls.'+'">Trading PnL APR</span>',cnt(p.pnl,'spc1','rk-pnl',tone(p.pnl)),null,3)+tile('24h volume',cnt(p.vol,'cu','rk-vol'),null,4)+'</div>'+
       '<p style="margin:0">'+verdict+'</p>'+
       '<div class="addr">'+esc(p.addr)+'</div>'+
