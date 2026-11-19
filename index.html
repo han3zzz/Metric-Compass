@@ -445,10 +445,10 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
       <label class="chk"><input id="f-locked" type="checkbox"> Locked pricing only</label>
     </div>
     <div class="tw"><table><thead><tr>
-      <th>Pool</th><th>Tier</th><th>Status</th><th class="n">TVL</th><th class="n">24h vol</th><th class="n" title="Markout APR, the APR shown in the Metric app. Period and horizon follow the two selectors above (Metric default: 7D, 5m).">APR (Markout)</th><th class="n" title="API field aprBps7d. Not the APR shown in the Metric app, and its exact definition is not in the public docs.">aprBps7d</th><th class="n" title="Trading profit or loss over 7 days versus simply holding the tokens, annualized">Trading PnL APR</th><th>Safety</th><th class="n">Age</th>
+      <th>Pool</th><th>Tier</th><th>Status</th><th class="n">TVL</th><th class="n">24h vol</th><th class="n" title="Markout APR, the APR shown in the Metric app. Period and horizon follow the two selectors above (Metric default: 7D, 5m).">APR (Markout)</th><th class="n" title="API field aprBps7d. Not the APR shown in the Metric app, and its exact definition is not in the public docs.">aprBps7d</th><th class="n" title="Unverified: Metric docs define Trading PnL as a dollar amount versus holding, but do not document this API field (tradingPnlAprBps7d), so its denominator and annualization are unknown. Do not compare it with the Metric app.">Trading PnL APR</th><th>Safety</th><th class="n">Age</th>
     </tr></thead><tbody id="pl-body"></tbody></table></div>
     <button class="btn more" id="pl-more" type="button" hidden>Show more</button>
-    <p class="note"><b>APR (Markout)</b> is the APR shown in the Metric app: markout divided by the liquidity of bins that traded in the period, annualized (per Metric docs). Pick the same period and markout horizon as in the app's Settings to match it. It shows a dash when under 70% of volume can be priced. <b>aprBps7d</b> and <b>Trading PnL APR</b> are raw API fields whose exact definitions are not in the public docs, so do not compare them directly with the app\'s APR.</p>
+    <p class="note"><b>APR (Markout)</b> is the APR shown in the Metric app: markout divided by the liquidity of bins that traded in the period, annualized (per Metric docs). Pick the same period and markout horizon as in the app's Settings to match it. It shows a dash when under 70% of volume can be priced. <b>aprBps7d</b> and <b>Trading PnL APR</b> are raw API fields whose exact definitions are not in the public docs, so do not compare them directly with the app\'s APR.<br><b>Note on Trading PnL APR:</b> in Metric's docs, Trading PnL is a dollar amount: the change in your token balances valued at today's prices, compared with simply holding what you deposited. This column comes from the API field <code>tradingPnlAprBps7d</code>, which the docs do not describe, so how it is divided and annualized is not confirmed. Treat it as a rough signal, and do not compare it with the Metric app.</p>
   </section>
  
   <!-- RISK SCAN -->
@@ -470,7 +470,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
  
   <!-- REALITY GAP -->
   <section class="tool" id="tool-gap" role="tabpanel" aria-labelledby="tab-gap" hidden>
-    <div class="head"><h2>APR Reality Gap</h2><p>The headline 7d APR counts fees only. Trading PnL APR also counts price moves versus simply holding. The gap between the two shows which pools look rich but quietly lose money.</p></div>
+    <div class="head"><h2>APR Reality Gap</h2><p>Compares two raw API fields: aprBps7d and Trading PnL APR (tradingPnlAprBps7d). Neither is the APR shown in the Metric app, and neither field is defined in the public docs, so read the gap as a rough signal only.</p></div>
     <div class="tiles" id="gp-tiles"></div>
     <div class="bar">
       <div class="fld"><label for="g-chain">Chain</label><div class="inp"><select id="g-chain"><option value="all">All</option></select></div></div>
@@ -479,9 +479,9 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
       <button class="btn" id="g-copy" type="button">Copy summary to share</button>
     </div>
     <div class="tw"><table><thead><tr>
-      <th>Pool</th><th>Tier</th><th class="n">TVL</th><th class="n">7d APR</th><th class="n">Trading PnL APR</th><th class="n" title="7d APR minus Trading PnL APR, in percentage points">Gap (pts)</th><th>APR vs real</th><th class="n" title="Same as Trading PnL APR">Yield used</th><th class="n" title="Percentile of Trading PnL APR among the pools shown. 100 = best">Rank</th><th>Verdict</th>
+      <th>Pool</th><th>Tier</th><th class="n">TVL</th><th class="n" title="API field aprBps7d. Not the APR shown in the Metric app.">aprBps7d</th><th class="n" title="Unverified: Metric docs define Trading PnL as a dollar amount versus holding, but do not document this API field (tradingPnlAprBps7d), so its denominator and annualization are unknown. Do not compare it with the Metric app.">Trading PnL APR</th><th class="n" title="aprBps7d minus Trading PnL APR, in percentage points">Gap (pts)</th><th>APR vs real</th><th class="n" title="Same as Trading PnL APR">Yield used</th><th class="n" title="Percentile of Trading PnL APR among the pools shown. 100 = best">Rank</th><th>Verdict</th>
     </tr></thead><tbody id="gp-body"></tbody></table></div>
-    <p class="note"><b>How to read the two numbers:</b> 7d APR is the fee income LPs earned, before price moves. Trading PnL APR is the all-in result: how much more or less LPs have than if they had simply held the tokens, valued at today's prices (Metric's own definition). Spread income is already inside it, so the two are never added together. <b>Below hold</b> = Trading PnL APR is below 0 (LPs did worse than simply holding over 7 days; red only when it is worse than -5%). <b>Reduced</b> = less than half of the headline APR survives. <b>Holds up</b> = at least half survives. The Rank column compares each pool with the others in this list, so you can still find the best option when the whole market is red. Annualizing 7 days exaggerates numbers, so anything beyond ±500% is shown capped. One week can flip next week: treat this as a signal to check, not a verdict. Click a row for the full risk scan.</p>
+    <p class="note"><b>Unverified fields:</b> aprBps7d and Trading PnL APR come straight from the API. Metric's docs define Trading PnL as a dollar amount: the change in your token balances valued at today's prices, compared with simply holding the tokens you deposited. They do not document these two API fields, so their denominator, annualization and whether spread income is included are not confirmed here. The labels below describe what the numbers do, not what Metric says. <b>Below hold</b> = Trading PnL APR is below 0 (red only when it is worse than -5%). <b>Reduced</b> = less than half of aprBps7d survives. <b>Holds up</b> = at least half survives. The Rank column compares each pool with the others in this list, so you can still find the best option when the whole market is red. Annualizing 7 days exaggerates numbers, so anything beyond ±500% is shown capped. One week can flip next week: treat this as a signal to check, not a verdict. Click a row for the full risk scan.</p>
   </section>
  
   <!-- COMPARE: pool DNA for one pool, pool duel for two -->
@@ -504,7 +504,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
     <p class="note" id="c-count" style="margin:0 0 12px"></p>
     <div class="gal" id="c-gal"></div>
     <button class="btn more" id="c-more" type="button" hidden>Show more</button>
-    <p class="note">Every axis is scaled 0 to 100 by this tool so pools can be compared. Real yield: Trading PnL APR from -10% (0) to +30% (100). Depth: TVL from $10K (0) to $10M (100). Stability: how close the 24h APR is to the 7d APR, a proxy because the API gives no longer history. Age: 180 days or more scores 100. Curator: verified status, green-tier share of their TVL and how many pools they run. In a duel, a round is a tie when both pools are within 4 points of each other, and a pool with no data for a trait loses that round. Seven days of data can flip quickly, so treat any winner as a snapshot. This is not Metric's rating and not financial advice.</p>
+    <p class="note">Every axis is scaled 0 to 100 by this tool so pools can be compared. Real yield: Trading PnL APR (an API field not documented by Metric, so unverified) from -10% (0) to +30% (100). Depth: TVL from $10K (0) to $10M (100). Stability: how close the 24h APR is to the 7d APR, a proxy because the API gives no longer history. Age: 180 days or more scores 100. Curator: verified status, green-tier share of their TVL and how many pools they run. In a duel, a round is a tie when both pools are within 4 points of each other, and a pool with no data for a trait loses that round. Seven days of data can flip quickly, so treat any winner as a snapshot. This is not Metric's rating and not financial advice.</p>
   </section>
 
   <!-- PORTFOLIO BUILDER -->
@@ -524,7 +524,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
     <div class="tiles" id="pf-tiles"></div>
     <div id="pf-out"></div>
     <div class="btnrow" style="margin-top:14px"><button class="btn pri" id="p-copy" type="button">Copy plan as text</button></div>
-    <p class="note">Only quotable, active pools where LPs did not lose versus holding over 7 days (Trading PnL APR of 0 or more) are considered. If too few qualify, pools down to -3% are added and the plan says so. Picks are spread across curators and avoid stacking the same volatile token. Yield figures are a 7-day snapshot annualized, not a forecast. The basket stress test uses a simpler model than the position stress test in Edge Lab (see the note above its table). Not financial advice.</p>
+    <p class="note">Only quotable, active pools with a Trading PnL APR of 0 or more are considered. This field is not documented by Metric (see the note in Find pools), so the filter and the "real yield" figures are a rough guide, not Metric numbers. If too few qualify, pools down to -3% are added and the plan says so. Picks are spread across curators and avoid stacking the same volatile token. Yield figures are a 7-day snapshot annualized, not a forecast. The basket stress test uses a simpler model than the position stress test in Edge Lab (see the note above its table). Not financial advice.</p>
   </section>
 
   <!-- EDGE LAB -->
@@ -665,7 +665,7 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
       <span class="livebadge"><i></i>Streaming every 15 s</span>
     </div>
     <div class="tiles" id="sp-tiles"></div>
-    <div class="tw"><table><thead><tr><th>Pool</th><th>Tier</th><th>Status</th><th class="n">Spread</th><th class="n">Available depth</th></tr></thead><tbody id="sp-body"></tbody></table></div>
+    <div class="tw"><table><thead><tr><th>Pool</th><th>Tier</th><th>Status</th><th class="n" title="Full spread (ask - bid) / mid. The Metric app shows half of this as 'Half-spread'.">Spread (full)</th><th class="n">Available depth</th></tr></thead><tbody id="sp-body"></tbody></table></div>
     <p class="note" id="sp-note"></p>
   </section>
  
@@ -746,7 +746,7 @@ function mk(i,pair,chain,tier,reasons,status,tvl,vol,apr,pnl,locked,verified,adm
     token0Symbol:s0,token1Symbol:s1,token0Decimals:d0,token1Decimals:d1,token0FiatPrice:p0,token1FiatPrice:p1,
     priceProviderStatus:status,priceProviderDetails:{providerType:'anchored',feedMode:'synthetic',marginStep:'0',mutableParams:!locked},
     priceProviderCooldownSecs:locked?'18446744073709551615':'86400',lockedPricing:locked,verifiedAdmin:verified,adminUsername:verified?admin:null,
-    admin:fakeAddr(500+admin.length*7+(verified?1:0)),creator:fakeAddr(500),spreadProtocolFeeE6:pro,spreadAdminFeeE6:adm,
+    admin:fakeAddr(500+admin.length*7+(verified?1:0)),creator:fakeAddr(500),spreadProtocolFeeE6:150000,spreadAdminFeeE6:adm,
     aprBps7d:apr,tradingPnlAprBps7d:pnl,pauseLevel:0,depositWhitelistingEnabled:allow,createdTimestamp:NOW-age*DAY,
     extensions:stop?['x']:[],extensionDetails:stop?{stopLoss:{drawdownE6:stop,timelockSecs:3600},priceVelocity:vel?{maxChangePerBlockE18:'1000000000000000'}:undefined}:{},
     classificationSummary:{tierQualification:tier,reasonCodes:reasons},tvlFiat:tvl,
@@ -994,7 +994,7 @@ function renderRisk(){
     '<div class="split"><div class="panel">'+
       '<div class="tiles" style="margin:0"><div class="tile big"><span class="tl">'+esc(p.pair)+' · '+esc(chainLabel(p.chainId))+'</span><div class="meter"><div class="big" style="color:'+col+'">'+cnt(sc,'int','rk-score')+'<small> / 100 safety score</small></div><div class="track"><div style="width:'+sc+'%;background:'+col+'"></div></div></div></div>'+
       tile('TVL',cnt(p.tvl,'cu','rk-tvl'),null,1)+tile('APR (Markout '+MK.p+', '+MK.h+')',cnt(mapr(p),'spc1','rk-mapr',tone(mapr(p))),null,2)+tile('aprBps7d',cnt(p.apr,'pc1','rk-apr'),null,2)+
-      tile('Trading PnL APR',cnt(p.pnl,'spc1','rk-pnl',tone(p.pnl)),null,3)+tile('24h volume',cnt(p.vol,'cu','rk-vol'),null,4)+'</div>'+
+      tile('<span title="'+'Unverified: Metric docs define Trading PnL as a dollar amount versus holding, but do not document this API field (tradingPnlAprBps7d), so its denominator and annualization are unknown. Do not compare it with the Metric app.'+'">Trading PnL APR (unverified)</span>',cnt(p.pnl,'spc1','rk-pnl',tone(p.pnl)),null,3)+tile('24h volume',cnt(p.vol,'cu','rk-vol'),null,4)+'</div>'+
       '<p style="margin:0">'+verdict+'</p>'+
       '<div class="addr">'+esc(p.addr)+'</div>'+
       '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="rk-copy" type="button">Copy address</button><button class="btn" id="rk-edge" type="button">Simulate in Edge Lab</button><a class="btn" href="https://app.metric.xyz" target="_blank" rel="noopener" style="text-decoration:none">Open Metric app</a></div>'+
@@ -1109,7 +1109,7 @@ function renderGap(){
   all.forEach(function(r){var t=r.p.tvl||0;tvl+=t;wa+=r.p.apr*t;wp+=r.eff*t;if(r.eff<0){neg++;negTvl+=t}});
   setTiles($('gp-tiles'),
     tile('Pools analyzed',cnt(all.length,'int','gp-n'),null,0)+
-    tile('7d APR (TVL-weighted)',tvl?cnt(wa/tvl,'pc1','gp-apr'):'—',null,1)+
+    tile('aprBps7d (TVL-weighted)',tvl?cnt(wa/tvl,'pc1','gp-apr'):'—',null,1)+
     tile((GB==='net'?'Fees + Trading PnL APR':'Trading PnL APR')+' (TVL-weighted)',tvl?cnt(wp/tvl,'spc1','gp-pnl',tone(wp)):'—',null,2)+
     tile('Pools in profit vs holding',cnt(all.length-neg,'int','gp-pos',all.length-neg?'pos':''),null,3)+
     tile('Pools below hold',cnt(neg,'int','gp-neg',neg?'wn':''),null,3)+
@@ -1133,7 +1133,7 @@ function gapSummaryText(){
   var top=GAPSHOT.slice(0,5);
   if(!top.length)return '';
   var lines=top.map(function(r,i){var p=r.p;
-    return (i+1)+'. '+p.pair+' ('+chainLabel(p.chainId)+'): headline APR '+pc(p.apr,1)+' → Trading PnL APR '+spc(p.pnl,1)+' · TVL '+cu(p.tvl)});
+    return (i+1)+'. '+p.pair+' ('+chainLabel(p.chainId)+'): aprBps7d '+pc(p.apr,1)+' → Trading PnL APR '+spc(p.pnl,1)+' · TVL '+cu(p.tvl)});
   return 'Metric Compass · APR Reality Gap (7d)\nBiggest gaps between headline APR and Trading PnL APR:\n'+lines.join('\n')+'\n\nCommunity tool, not financial advice. '+location.href.split('#')[0];
 }
  
@@ -1524,7 +1524,7 @@ function renderPort(){
 /* ====== BIN SCENARIO SIMULATOR ====== */
 /* Model: liquidity sits in discrete price bins (constant-sum, like a DLMM). Bins above the price hold token 0,
    bins below hold token 1. Traders crossing a bin convert it. Fees follow a Laplace volume profile around the price. */
-var BN={proto:7.5,pair:''};
+var BN={proto:15,pair:''}; /* Metric's default share of the spread is 15% (docs, Fees page) */
 var BKIND=[['apr','APR Pro-Rata'],['vol','Volume Pro-Rata'],['exp','Exponential'],['flat','Flat'],['single','Single bin'],['inv','Inverted'],['off','Off']];
 var BNAME={};BKIND.forEach(function(k){BNAME[k[0]]=k[1]});
 var BCOL=['#7BA0FF','#B25CF0','#36E3B2'],BLET=['A','B','C'];
@@ -1714,7 +1714,7 @@ function binLoad(id){
   if(p.tvl)$('sb-tvl').value=Math.round(p.tvl);
   if(p.vol!=null)$('sb-vol').value=Math.round(p.vol);
   if(p.adminPct!=null)$('sb-cs').value=Math.round(p.adminPct);
-  BN.proto=p.protoPct!=null?p.protoPct:7.5;BN.pair=p.pair;
+  BN.proto=p.protoPct!=null?p.protoPct:15;BN.pair=p.pair;
   $('sb-sl').value=p.stop&&p.stop.drawdownE6?+(p.stop.drawdownE6/1e4).toFixed(2):0;
   var sp=(LAST.spread||[]).filter(function(r){return r.p.id===p.id&&r.bps!=null})[0];
   if(sp)$('sb-spr').value=+sp.bps.toFixed(2);
@@ -1840,7 +1840,7 @@ function renderSpread(rows,sim){
   qx($('sp-body'));$('sp-body').innerHTML=rows.map(function(r,i){var p=r.p;
     return '<tr class="clk" style="--i:'+Math.min(i,14)+'" data-id="'+esc(p.id)+'" tabindex="0"><td class="pr"><b>'+esc(p.pair)+'</b><span>'+esc(short(p.addr))+'</span></td><td>'+tierBadge(p.tier)+'</td><td>'+statusCell(p.status)+'</td>'+
       '<td class="n '+(r.bps==null?'':r.bps<2?'pos':r.bps>6?'neg':'')+'">'+(r.bps==null?esc(r.note||'—'):nf(r.bps,2)+' bps')+'</td><td class="n">'+cu(r.depth)+'</td></tr>'}).join('')||'<tr><td colspan="5"><div class="empty">No pools yet.</div></td></tr>';
-  $('sp-note').textContent=(sim?'Simulated numbers because the API could not be reached. ':'')+'Spread = (ask − bid) / mid price, taken from the pool bid and ask. Depth is the total tokens the pool is ready to trade, converted to USD with the API fiat prices.';
+  $('sp-note').textContent=(sim?'Simulated numbers because the API could not be reached. ':'')+'Spread = (ask − bid) / mid price, taken from the pool bid and ask. This is the full spread; the Metric app shows the half-spread, which is half of this number. Depth is the total tokens the pool is ready to trade, converted to USD with the API fiat prices.';
 }
 function runSpread(silent){
   silent=silent===true;lastSp=Date.now();var cid=$('sp-chain').value,n=+$('sp-n').value;
@@ -1855,11 +1855,6 @@ function runSpread(silent){
     $('sp-note').textContent='Could not read bid/ask: '+(e&&e.message?e.message:'unknown error')+'. On a 429 error, wait a few seconds and try again.';$('sp-go').disabled=false;
   });
 }
-function setAuto(){
-  if(spreadTimer){clearInterval(spreadTimer);spreadTimer=null}
-  if($('sp-auto').checked)spreadTimer=setInterval(function(){if(location.hash==='#spread')runSpread()},30000);
-}
- 
 /* ====== navigation ====== */
 function renderAll(){
   renderPools();renderRisk();renderCurators();renderGap();renderCmp();renderPort();renderEdge();renderBins();fillTokens();syncAll();
@@ -2103,7 +2098,7 @@ function ctx(){
   if(LAST.spread&&LAST.spread.length)L.push('Spread monitor (tightest first):\n'+LAST.spread.slice(0,12).map(function(r){return r.p.pair+' ['+r.p.tier+'] '+(r.bps==null?(r.note||'n/a'):nf(r.bps,2)+' bps')+' depth '+cu(r.depth)}).join('\n'));
   return L.join('\n\n');
 }
-var SYS='You are Compass AI, the assistant built into "Metric Compass", a community dashboard for Metric (api.metric.xyz), an onchain market-making/LP protocol. Tabs: Find pools (filter by chain/tier/health), Risk scan (checklist per pool), Curators (pools grouped by curator), Edge Lab (simulates an LP\'s Edge and Trading PnL), Route check (router quote vs reference price), Spread monitor (live bid/ask spreads) and Reality Gap (7d APR vs Trading PnL APR per pool; a negative Trading PnL means LPs lost versus simply holding). Edge Lab also has a Position stress test (token price moves, depeg, repeated one-way trades) that follows one position using the real fill price and edge the user entered. The Compare tab shows Pool DNA for one pool (0-100 on real yield, safety, depth, stability as 24h vs 7d APR consistency, age and curator, plus an archetype name) and, once a second pool is added, a Pool duel on those six traits (a gap under 4 points is a tie). Edge Lab also has a Bin Scenario Simulator: liquidity spread over price bins with strategies (APR Pro-Rata, Volume Pro-Rata, Exponential, Flat, Single bin, Inverted), scenarios for price move, volume, spread and curator fee share, a side-by-side comparison of up to three strategies, and a reference price jump stress test that checks a stop-loss step by step. Its numbers come from a simplified model, so say so. Portfolio builder picks 3-5 quotable pools with non-negative Trading PnL APR for a Cautious/Balanced/Bold profile, splits the capital, and runs a Basket stress test, a rougher model than the Edge Lab Position stress test (50/50 value split, held, no fees or edge), so the two will not match. The safety score is this tool\'s own rating, not Metric\'s: tier up to 40 (green 40, yellow 25, red 5), price provider quotable 25, locked pricing 10, verified curator 10, pool active 10, stop-loss present 5. APR = LP share of fees over 7 days annualized; Trading PnL APR also counts price moves versus holding. Answer in the same language the user writes in (Vietnamese if they write Vietnamese). Use ONLY the numbers in the live context below; if something is not there, say so instead of guessing. Be concise, explain jargon simply, mention risks honestly, and remind the user this is not financial advice when they ask whether to deposit.\n\nLIVE CONTEXT (what the user sees right now):\n';
+var SYS='You are Compass AI, the assistant built into "Metric Compass", a community dashboard for Metric (api.metric.xyz), an onchain market-making/LP protocol. Tabs: Find pools (filter by chain/tier/health), Risk scan (checklist per pool), Curators (pools grouped by curator), Edge Lab (simulates an LP\'s Edge and Trading PnL), Route check (router quote vs reference price), Spread monitor (live bid/ask spreads) and Reality Gap (7d APR vs Trading PnL APR per pool; a negative Trading PnL means LPs lost versus simply holding). Edge Lab also has a Position stress test (token price moves, depeg, repeated one-way trades) that follows one position using the real fill price and edge the user entered. The Compare tab shows Pool DNA for one pool (0-100 on real yield, safety, depth, stability as 24h vs 7d APR consistency, age and curator, plus an archetype name) and, once a second pool is added, a Pool duel on those six traits (a gap under 4 points is a tie). Edge Lab also has a Bin Scenario Simulator: liquidity spread over price bins with strategies (APR Pro-Rata, Volume Pro-Rata, Exponential, Flat, Single bin, Inverted), scenarios for price move, volume, spread and curator fee share, a side-by-side comparison of up to three strategies, and a reference price jump stress test that checks a stop-loss step by step. Its numbers come from a simplified model, so say so. Portfolio builder picks 3-5 quotable pools with non-negative Trading PnL APR for a Cautious/Balanced/Bold profile, splits the capital, and runs a Basket stress test, a rougher model than the Edge Lab Position stress test (50/50 value split, held, no fees or edge), so the two will not match. The safety score is this tool\'s own rating, not Metric\'s: tier up to 40 (green 40, yellow 25, red 5), price provider quotable 25, locked pricing 10, verified curator 10, pool active 10, stop-loss present 5. The APR shown in the Metric app is Markout APR (markout divided by the liquidity of bins that traded, annualized; default 7 days at 5 minutes); this tool shows it as APR (Markout). The raw API fields aprBps7d and tradingPnlAprBps7d are not defined in the public Metric docs, so never present them as the APR of the Metric app. Answer in the same language the user writes in (Vietnamese if they write Vietnamese). Use ONLY the numbers in the live context below; if something is not there, say so instead of guessing. Be concise, explain jargon simply, mention risks honestly, and remind the user this is not financial advice when they ask whether to deposit.\n\nLIVE CONTEXT (what the user sees right now):\n';
 function aiSend(text){
   text=String(text||'').trim();if(!text||AI.busy)return;
     addMsg('user',text);$('ai-in').value='';$('ai-in').style.height='auto';
