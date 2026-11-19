@@ -437,16 +437,18 @@ body.ai-open .fab{opacity:0;pointer-events:none;transform:scale(.8)}
           <button class="tg" type="button" data-v="other" aria-pressed="false">Other</button>
         </div></div>
       <div class="fld"><label for="f-min">Min TVL</label><div class="inp"><select id="f-min"><option value="0" selected>No minimum</option><option value="10000">$10K</option><option value="100000" >$100K</option><option value="1000000">$1M</option></select></div></div>
-      <div class="fld"><label for="f-sort">Sort by</label><div class="inp"><select id="f-sort"><option value="tvl">TVL</option><option value="apr">7d APR</option><option value="pnl">Trading PnL APR</option><option value="vol">24h volume</option><option value="score">Safety score</option><option value="new">Newest</option></select></div></div>
+      <div class="fld"><label for="f-per">APR period</label><div class="inp"><select id="f-per"><option value="24h">24H</option><option value="7d" selected>7D</option><option value="30d">30D</option><option value="all">All-time</option></select></div></div>
+      <div class="fld"><label for="f-hor">Markout</label><div class="inp"><select id="f-hor"><option value="1m">1m</option><option value="5m" selected>5m</option><option value="30m">30m</option></select></div></div>
+      <div class="fld"><label for="f-sort">Sort by</label><div class="inp"><select id="f-sort"><option value="tvl">TVL</option><option value="mapr">APR (Markout)</option><option value="apr">aprBps7d</option><option value="pnl">Trading PnL APR</option><option value="vol">24h volume</option><option value="score">Safety score</option><option value="new">Newest</option></select></div></div>
       <div class="fld grow"><label for="f-q">Search</label><div class="inp"><input id="f-q" type="search" placeholder="Pair, curator or address"></div></div>
       <label class="chk"><input id="f-healthy" type="checkbox"> Quotable pools only</label>
       <label class="chk"><input id="f-locked" type="checkbox"> Locked pricing only</label>
     </div>
     <div class="tw"><table><thead><tr>
-      <th>Pool</th><th>Tier</th><th>Status</th><th class="n">TVL</th><th class="n">24h vol</th><th class="n" title="LP share of fees over the last 7 days, annualized, before token price moves">7d APR</th><th class="n" title="Trading profit or loss over 7 days versus simply holding the tokens, annualized">Trading PnL APR</th><th>Safety</th><th class="n">Age</th>
+      <th>Pool</th><th>Tier</th><th>Status</th><th class="n">TVL</th><th class="n">24h vol</th><th class="n" title="Markout APR, the APR shown in the Metric app. Period and horizon follow the two selectors above (Metric default: 7D, 5m).">APR (Markout)</th><th class="n" title="API field aprBps7d. Not the APR shown in the Metric app, and its exact definition is not in the public docs.">aprBps7d</th><th class="n" title="Trading profit or loss over 7 days versus simply holding the tokens, annualized">Trading PnL APR</th><th>Safety</th><th class="n">Age</th>
     </tr></thead><tbody id="pl-body"></tbody></table></div>
     <button class="btn more" id="pl-more" type="button" hidden>Show more</button>
-    <p class="note">APR is the LP share of fees over the last 7 days, annualized, before token price moves. Trading PnL APR also counts price moves of both tokens against simply holding them, so it is closer to the real result.</p>
+    <p class="note"><b>APR (Markout)</b> is the APR shown in the Metric app: markout divided by the liquidity of bins that traded in the period, annualized (per Metric docs). Pick the same period and markout horizon as in the app's Settings to match it. It shows a dash when under 70% of volume can be priced. <b>aprBps7d</b> and <b>Trading PnL APR</b> are raw API fields whose exact definitions are not in the public docs, so do not compare them directly with the app\'s APR.</p>
   </section>
  
   <!-- RISK SCAN -->
@@ -793,12 +795,18 @@ function norm(p,chainId){
     paused:(p.pauseLevel||0)>0,created:p.createdTimestamp||null,
     adminPct:p.spreadAdminFeeE6!=null?p.spreadAdminFeeE6/1e4:null,protoPct:p.spreadProtocolFeeE6!=null?p.spreadProtocolFeeE6/1e4:null,
     allow:!!p.depositWhitelistingEnabled,stop:ed.stopLoss||null,vel:ed.priceVelocity||null,prov:pd,mutable:pd.mutableParams===true,exts:(p.extensions||[]).length,
-    chainName:p.chain};
+    chainName:p.chain,mk:p.markoutByWindow||null};
   o.lpPct=(o.adminPct!=null&&o.protoPct!=null)?100-o.adminPct-o.protoPct:null;
   o.score=score(o);
   return o;
 }
  
+/* Markout APR: the APR the Metric app shows. Period and horizon mirror the app's Settings (default 7d, 5m). */
+var MK={p:'7d',h:'5m'};
+function mapr(p){var w=p.mk&&p.mk[MK.p],b=w&&w.byHorizon&&w.byHorizon[MK.h];
+  if(!b||b.aprBps==null)return null;
+  if(b.pricedVolumeShare!=null&&b.pricedVolumeShare<0.7)return null; /* docs: unavailable when under 70% of volume can be priced */
+  return b.aprBps/100}
 var S={pools:[],chains:[],source:'sample',updated:null,sel:null,limit:60};
 var CHAIN_NAME={1:'Ethereum',56:'BNB Chain'};
 function chainLabel(id){return CHAIN_NAME[id]||('Chain '+id)}
@@ -918,7 +926,7 @@ function renderPools(){
     return true;
   });
   var key=$('f-sort').value;
-  var val={tvl:function(p){return p.tvl},apr:function(p){return p.apr},pnl:function(p){return p.pnl},vol:function(p){return p.vol},score:function(p){return p.score},new:function(p){return p.created}}[key];
+  var val={tvl:function(p){return p.tvl},mapr:function(p){return mapr(p)},apr:function(p){return p.apr},pnl:function(p){return p.pnl},vol:function(p){return p.vol},score:function(p){return p.score},new:function(p){return p.created}}[key];
   L.sort(function(a,b){var x=val(a),y=val(b);if(x==null)x=-Infinity;if(y==null)y=-Infinity;return y-x});
   var tvl=0,vol=0,gr=0;L.forEach(function(p){tvl+=p.tvl||0;vol+=p.vol||0;if(p.tier==='green')gr+=p.tvl||0});
   setTiles($('pl-tiles'),
@@ -931,9 +939,9 @@ function renderPools(){
     return '<tr class="clk" style="--i:'+d+'" data-id="'+esc(p.id)+'" tabindex="0"><td class="pr"><b>'+esc(p.pair)+'</b><span>'+esc(chainLabel(p.chainId))+' · '+esc(short(p.addr))+'</span></td>'+
       '<td>'+tierBadge(p.tier)+'</td><td>'+statusCell(p.status)+'</td>'+
       '<td class="n">'+cu(p.tvl)+'</td><td class="n">'+cu(p.vol)+'</td>'+
-      '<td class="n">'+pc(p.apr,1)+'</td><td class="n '+tone(p.pnl)+'">'+spc(p.pnl,1)+'</td>'+
+      '<td class="n '+tone(mapr(p))+'">'+spc(mapr(p),1)+'</td><td class="n">'+pc(p.apr,1)+'</td><td class="n '+tone(p.pnl)+'">'+spc(p.pnl,1)+'</td>'+
       '<td>'+scoreCell(p.score,d)+'</td><td class="n">'+ageText(p.created)+'</td></tr>';
-  }).join(''):'<tr><td colspan="9"><div class="empty">No pools match these filters.</div></td></tr>';
+  }).join(''):'<tr><td colspan="10"><div class="empty">No pools match these filters.</div></td></tr>';
   $('pl-more').hidden=L.length<=S.limit;
 }
  
@@ -985,7 +993,7 @@ function renderRisk(){
   box.innerHTML=
     '<div class="split"><div class="panel">'+
       '<div class="tiles" style="margin:0"><div class="tile big"><span class="tl">'+esc(p.pair)+' · '+esc(chainLabel(p.chainId))+'</span><div class="meter"><div class="big" style="color:'+col+'">'+cnt(sc,'int','rk-score')+'<small> / 100 safety score</small></div><div class="track"><div style="width:'+sc+'%;background:'+col+'"></div></div></div></div>'+
-      tile('TVL',cnt(p.tvl,'cu','rk-tvl'),null,1)+tile('7d APR',cnt(p.apr,'pc1','rk-apr'),null,2)+
+      tile('TVL',cnt(p.tvl,'cu','rk-tvl'),null,1)+tile('APR (Markout '+MK.p+', '+MK.h+')',cnt(mapr(p),'spc1','rk-mapr',tone(mapr(p))),null,2)+tile('aprBps7d',cnt(p.apr,'pc1','rk-apr'),null,2)+
       tile('Trading PnL APR',cnt(p.pnl,'spc1','rk-pnl',tone(p.pnl)),null,3)+tile('24h volume',cnt(p.vol,'cu','rk-vol'),null,4)+'</div>'+
       '<p style="margin:0">'+verdict+'</p>'+
       '<div class="addr">'+esc(p.addr)+'</div>'+
@@ -1887,6 +1895,7 @@ window.addEventListener('resize',placeInd);
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(placeInd);
  
 ['f-chain','f-min','f-sort','f-healthy','f-locked'].forEach(function(id){$(id).addEventListener('input',function(){S.limit=60;renderPools()})});
+['f-per','f-hor'].forEach(function(id){$(id).addEventListener('input',function(){MK.p=$('f-per').value;MK.h=$('f-hor').value;S.limit=60;renderPools();renderRisk()})});
 $('f-q').addEventListener('input',function(){S.limit=60;QUIET=true;renderPools();QUIET=false});
 document.querySelectorAll('#f-tiers .tg').forEach(function(b){b.addEventListener('click',function(){b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');S.limit=60;renderPools()})});
 $('pl-more').addEventListener('click',function(){S.limit+=60;renderPools()});
@@ -2076,7 +2085,7 @@ function aiOpen(v){
   if(v)setTimeout(function(){$('ai-in').focus()},380)
 }
 function ctx(){
-  var f=function(p){return p.pair+' ['+chainLabel(p.chainId)+'] tier='+p.tier+' status='+p.status+' TVL='+cu(p.tvl)+' vol24h='+cu(p.vol)+' APR7d='+pc(p.apr,1)+' tradingPnlAPR='+spc(p.pnl,1)+' safetyScore='+p.score+' curator='+(p.adminName||short(p.admin))+(p.verified?' (verified)':' (unverified)')+' age='+ageText(p.created)+' lockedPricing='+p.locked+' address='+p.addr};
+  var f=function(p){return p.pair+' ['+chainLabel(p.chainId)+'] tier='+p.tier+' status='+p.status+' TVL='+cu(p.tvl)+' vol24h='+cu(p.vol)+' MarkoutAPR('+MK.p+','+MK.h+')='+spc(mapr(p),1)+' aprBps7d='+pc(p.apr,1)+' tradingPnlAPR='+spc(p.pnl,1)+' safetyScore='+p.score+' curator='+(p.adminName||short(p.admin))+(p.verified?' (verified)':' (unverified)')+' age='+ageText(p.created)+' lockedPricing='+p.locked+' address='+p.addr};
   var L=['Data source: '+S.source+(S.source==='sample'?' (illustrative sample data, not real)':'')+(S.updated?', last update '+S.updated.toLocaleTimeString('en-US'):'')+'. Pools loaded: '+S.pools.length+'. Open tab: '+(location.hash.replace('#','')||'pools')+'.'];
   L.push('Top pools by TVL:\n'+poolsByTvl().slice(0,30).map(f).join('\n'));
   var sel=S.pools.filter(function(x){return x.id===S.sel})[0];
